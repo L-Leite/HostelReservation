@@ -1,9 +1,14 @@
 # HostelManagement
 A web page to reserve hostels.
 
-By Daniel Rocha and Luís Leite.
+This project will be presented as a professional aptitude test for our course.
+
+By [Daniel Rocha](https://github.com/GODManiax) and [Luís Leite](https://github.com/Ochii).
+
+## Credits
+- [Mark Otto](https://twitter.com/mdo) for the page templates
 
 ## Libraries used
 - [Bootstrap](https://getbootstrap.com/)
 - [jQuery](https://jquery.com/)
-- [https://popper.js.org/](https://popper.js.org/)
+- [Popper.js](https://popper.js.org/)

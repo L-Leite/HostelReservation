@@ -10,6 +10,15 @@ a:hover {
 }
 
 /* Custom default button */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus {
+  color: #fff;
+  text-shadow: none; /* Prevent inheritance from `body` */
+  background-color: #333;
+  border: .05rem solid #333;
+}
+
 .btn-secondary,
 .btn-secondary:hover,
 .btn-secondary:focus {
@@ -28,7 +37,7 @@ html,
 body {
   height: 100%;
   /*background-color: #333;*/
-  background-image: url("../img/cover-1.png");
+  background-image: url("../images/cover-1.png");
   background-repeat: no-repeat;
   background-size: cover;
 }

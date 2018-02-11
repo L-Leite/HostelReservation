@@ -1,11 +1,15 @@
 <?php
+require 'src/session.php';
+
+if (!isSessionSet() === false)
+  header('Location: cover.html');
 ?>
 <!doctype html>
 <html lang="pt-pt">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+
     <title>Hello, world!</title>
 
     <!-- Bootstrap CSS -->
