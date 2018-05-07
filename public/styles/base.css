@@ -1,0 +1,126 @@
+/* body */
+
+body {
+  display: block;
+  justify-content: center;
+  scroll-behavior: smooth;
+}
+
+/* alerts */
+
+.alert-danger {
+  background-color: transparent;
+  border-color: #721c24;
+}
+
+/* buttons */
+
+.btn {
+  border-radius: 0;
+}
+
+.btn-primary {
+  background-color: transparent;
+  border: .05rem solid #222;
+  color: black;
+  text-shadow: none;
+}
+
+.btn-primary:hover, .btn-primary:focus .btn-primary:active {
+  background-color: rgba(34, 34, 34, 0.8);
+  border: .05rem solid black;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: .05rem solid #ddd;
+  color: #ddd;
+  text-shadow: none;
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+  background-color: white;
+  border: .05rem solid white;
+  color: #222;
+  text-shadow: none;
+}
+
+/* navbar */
+
+.navbar {
+  color: white;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+}
+
+.navbar .navbar-link {
+  padding: 1rem;
+}
+
+.navbar-light {
+  background-color: white;
+  transition: all .2s ease-in-out;
+  transition-property: color;
+}
+
+.navbar .navbar-link {
+  border-bottom: .25rem solid transparent;
+  color: rgba(255, 255, 255, .5);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  padding: .25rem 0;
+  transition: background-color .2s ease-in-out;
+}
+
+.navbar .navbar-link:hover, .navbar .navbar-link:focus {
+  color: white;
+  transition: all .2s ease-in-out;
+  transition-property: color;
+}
+
+.navbar .navbar-link.scrolled {
+  color: rgba(0, 0, 0, .5);
+}
+
+.navbar .navbar-link.scrolled:hover, .navbar .navbar-link.scrolled:focus {
+  color: black;
+  transition: all .2s ease-in-out;
+  transition-property: color;
+}
+
+.navbar-fixed-top {
+  background-color: transparent;
+  transition: background-color .2s ease-in-out;
+}
+
+.navbar-fixed-top.scrolled {
+  background-color: white !important;
+  border-bottom: 0.1rem solid #ddd;
+  transition: all .2s ease-in-out;
+}
+
+.navbar a {
+  text-decoration: none;
+}
+
+.navbar-brand a {
+  color: white;
+  transition: all .2s ease-in-out;
+}
+
+.navbar-brand.scrolled a {
+  color: #222 !important;
+  transition: all .2s ease-in-out;
+}
+
+/* footer */
+
+.footer-links {
+  display: flex;
+  list-style-type: none;
+}
+
+.footer-links li {
+  margin-left: 2rem;
+}

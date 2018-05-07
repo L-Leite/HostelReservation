@@ -1,0 +1,85 @@
+/* body */
+
+body {
+  display: block;
+  justify-content: center;
+  scroll-behavior: smooth;
+}
+
+/* backgrounds */
+
+.bg-jumbotron {
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* text */
+
+.text-white.text-muted {
+  color: hsla(0, 0%, 100%, .65) !important
+}
+
+/* container */
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* jumbotron */
+
+.jumbotron {
+  align-items: center;
+  color: white;
+  display: flex;
+  margin-bottom: 4rem;
+  min-height: 100vh;
+  text-align: center;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+}
+
+/* buttons do jumbotron */
+
+.jumbotron .btn-primary {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: .05rem solid black;
+  color: white;
+  text-shadow: none;
+}
+
+.jumbotron .btn-primary:hover, .jumbotron .btn-primary:focus .jumbotron .btn-primary:active {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: .05rem solid #222;
+}
+
+.jumbotron .btn-secondary {
+  background-color: rgba(255, 255, 255, 0.6);
+  border: .05rem solid #ddd;
+  color: black;
+  text-shadow: none;
+}
+
+.jumbotron .btn-secondary:hover, .jumbotron .btn-secondary:focus {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: .05rem solid white;
+  color: #333;
+  text-shadow: none;
+}
+
+/* featurette */
+
+.featurette-divider {
+  margin: 5rem 0;
+}
+
+.featurette-heading {
+  margin-top: 7rem;
+}
+
+/* column row */
+
+.row-column {
+  color: white;
+  padding: 7rem 0;
+}
