@@ -63,10 +63,10 @@ try {
   <meta name="author" content="">
   <link rel="icon" href="favicon.ico">
 
-  <title>Crie uma conta - HostelReservation</title>
+  <title>Crie uma conta | HostelReservation</title>
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css" />
 
   <!-- CSS base -->
   <link href="styles/base.css" rel="stylesheet">
@@ -76,7 +76,7 @@ try {
 </head>
 
 <body>
-  <?php require('templates/navbar.php'); ?>
+  <?php //require('templates/navbar.php'); ?>
 
   <main class="text-center">
     <form class="form-signin" id="signupForm" method="POST">
@@ -118,11 +118,11 @@ try {
   </main>
 
   <!-- jQuery -->
-  <script src="vendor/jquery/dist/jquery.js"></script>
+  <script src="vendor/jquery/dist/jquery.min.js"></script>
 
   <!-- Bootstrap e as suas dependências -->
-  <script src="vendor/popper.js/dist/umd/popper.js"></script>
-  <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
+  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
   <!-- jQuery-validate para os formulários -->
   <script src="vendor/jquery-validation/dist/jquery.validate.js"></script>
@@ -134,68 +134,54 @@ try {
   <script src="js/utils.js"></script>
 
   <script>
-    $('#signupForm').validate({
-      debug: true,
-      /*showErrors: function(errorMap, errorList) {
-        console.log(errorMap)
-        console.log(errorList)
-      },*/
-      /*invalidHandler: function(event, validator) {
-        // 'this' refers to the form
-        var errors = validator.numberOfInvalids();
-        if (errors) {
-          var message = errors == 1
-            ? 'You missed 1 field. It has been highlighted'
-            : 'You missed ' + errors + ' fields. They have been highlighted'
-          $("#errorMessage").html(message)
-          $("#errorMessage").fadeIn(100)
-        } else {
-          $("#errorMessage").fadeOut(100)
-        }
-      },*/
-      errorPlacement: function (error, element) {
-        $('#errorContainer').toggle().html(error)
-    },
-      submitHandler: function(form) {
-        var inputPassword = $('#inputPassword').val()
-        var hashedPassword = CryptoJS.SHA3(inputPassword)
+    $('#signupForm').submit(function(form) {
+      console.log('teste')
+      form.preventDefault()
 
-        var postData = {}
-        for (var i = 0;i < form.length; ++i) {
-          var input = form[i]
-          if (input.name) {
-            postData[input.name] = input.value
+      if ($('#inputPassword').value !== $('#inputConfPassword').value) {
+        $('#errorContainer').show('fast')
+          .find('span').html('Por favor repita a sua palavra-passe corretamente.')
+        return
+      }
+
+      var inputPassword = $('#inputPassword').val()
+      var hashedPassword = CryptoJS.SHA3(inputPassword)
+
+      var postData = {}
+      for (var i = 0; i < form.length; ++i) {
+        var input = form[i]
+        if (input.name) {
+          postData[input.name] = input.value
+        }
+      }
+
+      postData['password'] = hashedPassword.toString()
+
+      $.post(form.action, postData)
+        .done(function(data){
+          var statusData = $.parseJSON(data)
+          var status = statusData['status']
+          if (status == 'ok') {
+            redirectToPage('list.php');
           }
-        }
+          else {
+            var message = statusData['message']
 
-        postData['password'] = hashedPassword.toString()
-
-        $.post(form.action, postData)
-          .done(function(data){
-            var statusData = $.parseJSON(data)
-            var status = statusData['status']
-            if (status == 'ok') {
-              redirectToPage('list.php');
+            if (message === 'userAlreadyExists') {
+              $('#errorContainer').show('fast')
+                .find('span').html('Este utilizador já existe!')
             }
             else {
-              var message = statusData['message']
-
-              if (message === 'userAlreadyExists') {
-                $('#errorContainer').show('fast')
-                  .find('span').html('Este utilizador já existe!')
-              }
-              else {
-                $('#errorContainer').show('fast')
-                  .find('span').html('Ocorreu um erro ao criar a sua conta.')
-              }
+              $('#errorContainer').show('fast')
+                .find('span').html('Ocorreu um erro ao criar a sua conta.')
             }
-          })
-          .fail(function(){
-            $('#errorContainer').show('fast')
-              .find('span').html('Ocorreu um erro ao criar a sua conta.')
-          })
-      }
-    });
+          }
+        })
+        .fail(function(){
+          $('#errorContainer').show('fast')
+            .find('span').html('Ocorreu um erro ao criar a sua conta.')
+        })
+    })
   </script>
 
   <!-- TEMP: Remover isto. É usado para atualizar automaticamente páginas alteradas -->

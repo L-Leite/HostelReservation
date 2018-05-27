@@ -15,7 +15,6 @@ By [Daniel Rocha](https://github.com/GODManiax) and [Luís Leite](https://github
 -   [jQuery](https://jquery.com/)
 -   [Popper.js](https://popper.js.org/)
 -   [Bootstrap](https://getbootstrap.com/)
--   [jQuery Validation](https://jqueryvalidation.org/)
 -   [crypto-js](https://github.com/brix/crypto-js)
 
 ## Pictures used

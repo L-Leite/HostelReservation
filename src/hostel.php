@@ -123,7 +123,19 @@
             return $outHostel;
         }
 
-        public function newHostel($address, $roomPrice, $roomsAvailable)
+        public function getHostelInfo()
+        {
+          $stmt = $this->m_dbConn->prepare('SELECT name, image_url FROM hostel WHERE id = :id;');
+
+          if (!$stmt->execute()) {
+              throw exception('HostelManagement::getHostel: não foi possível executar a query!');
+          }
+
+          $outHostel = $stmt->fetchAll();
+          return $outHostel;
+        }
+
+        public function newHostel($address, $roomPrice, $roomsAvailable = 0)
         {
             $stmt = $this->m_dbConn->prepare('INSERT INTO hostelgrade(address,room_price,rooms_available)
                                     VALUES(:address,:room_price,:rooms_available);');

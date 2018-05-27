@@ -48,20 +48,20 @@ try {
   <meta name="author" content="">
   <link rel="icon" href="favicon.ico">
 
-  <title>Entre na sua conta - HostelReservation</title>
+  <title>Entre na sua conta | HostelReservation</title>
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css" />
 
   <!-- CSS base -->
-  <link href="styles/base.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/base.css">
 
   <!-- CSS do login -->
-  <link href="styles/login.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/login.css">
 </head>
 
 <body>
-  <?php require('templates/navbar.php'); ?>
+  <?php //require('templates/navbar.php'); ?>
 
   <main class="text-center">
     <form class="form-signin" id="loginForm" method="POST">
@@ -83,11 +83,11 @@ try {
   </main>
 
   <!-- jQuery -->
-  <script src="vendor/jquery/dist/jquery.js"></script>
+  <script src="vendor/jquery/dist/jquery.min.js"></script>
 
   <!-- Bootstrap e as suas dependências -->
-  <script src="vendor/popper.js/dist/umd/popper.js"></script>
-  <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
+  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
   <!-- jQuery-validate para os formulários -->
   <script src="vendor/jquery-validation/dist/jquery.validate.js"></script>

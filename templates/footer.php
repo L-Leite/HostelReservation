@@ -23,8 +23,11 @@
      </div>
      <div class="row">
        <div class="col-md-auto">
-         <p class="text-white text-muted small">Prova de Aptidão Profissional do curso de Técnico de Gestão e Programação de Sistemas Informáticos. </p>
+         <p class="text-white text-muted small">Prova de Aptidão Profissional do curso de Técnico de Gestão e Programação de Sistemas Informáticos.<br></p>
        </div>
+       <div class="row justify-content-end">
+         <i class="fab fa-github"></i>
+      </div>
      </div>
    </div>
  </footer>

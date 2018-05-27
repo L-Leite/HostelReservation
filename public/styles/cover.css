@@ -31,6 +31,7 @@ body {
 
 .jumbotron {
   align-items: center;
+  border-radius: 0;
   color: white;
   display: flex;
   margin-bottom: 4rem;

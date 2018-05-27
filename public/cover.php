@@ -14,13 +14,13 @@ require '../config/www.php';
   <title>Reserve hosteis | HostelReservation</title>
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css" />
 
   <!-- CSS base -->
-  <link href="styles/base.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/base.css">
 
   <!-- CSS do cover -->
-  <link href="styles/cover.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/cover.css">
 </head>
 
 <body>
@@ -115,11 +115,11 @@ require '../config/www.php';
   <?php require('templates/footer.php'); ?>
 
   <!-- jQuery -->
-  <script src="vendor/jquery/dist/jquery.js"></script>
+  <script src="vendor/jquery/dist/jquery.min.js"></script>
 
   <!-- Bootstrap e as suas dependências -->
-  <script src="vendor/popper.js/dist/umd/popper.js"></script>
-  <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
+  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
   <script src="js/cover.js"></script>
 
