@@ -23,7 +23,7 @@ function setSession($userId)
 
 function deleteSession()
 {
-    unset($_SESSION['username']);
+    unset($_SESSION['userId']);
 }
 
 function destroySession()
