@@ -9,6 +9,7 @@ body {
 /* backgrounds */
 
 .bg-jumbotron {
+  background-image: url('../images/cover-1.png');
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -49,7 +50,8 @@ body {
   text-shadow: none;
 }
 
-.jumbotron .btn-primary:hover, .jumbotron .btn-primary:focus .jumbotron .btn-primary:active {
+.jumbotron .btn-primary:hover,
+.jumbotron .btn-primary:focus .jumbotron .btn-primary:active {
   background-color: rgba(0, 0, 0, 0.8);
   border: .05rem solid #222;
 }
@@ -61,7 +63,8 @@ body {
   text-shadow: none;
 }
 
-.jumbotron .btn-secondary:hover, .jumbotron .btn-secondary:focus {
+.jumbotron .btn-secondary:hover,
+.jumbotron .btn-secondary:focus {
   background-color: rgba(255, 255, 255, 0.8);
   border: .05rem solid white;
   color: #333;

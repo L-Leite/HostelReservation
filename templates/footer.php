@@ -1,5 +1,5 @@
 <?php
- ?>
+?>
   <!-- footer com informação sobre o projeto -->
   <footer class="bg-dark row-column">
    <div class="container">

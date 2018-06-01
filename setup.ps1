@@ -1,2 +1,2 @@
-echo "Installing front-end libraries..."
+Write-Output "Installing front-end libraries..."
 yarn install --modules-folder ./public/vendor

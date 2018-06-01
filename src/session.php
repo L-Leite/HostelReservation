@@ -1,29 +1,36 @@
 <?php
-    function hasSessionStarted()
-    {
-        return session_status() == PHP_SESSION_ACTIVE;
-    }
+// exposes session functions and starts it
 
-    function isSessionSet()
-    {
-        return isset($_SESSION['username']);
-    }
+function hasSessionStarted()
+{
+    return session_status() == PHP_SESSION_ACTIVE;
+}
 
-    function setSession($username)
-    {
-        $_SESSION['username'] = $username;
-    }
+function getSessionUser()
+{
+    return $_SESSION['userId'];
+}
 
-    function deleteSession()
-    {
-        unsset($_SESSION['username']);
-    }
+function isSessionSet()
+{
+    return isset($_SESSION['userId']);
+}
 
-    function destroySession()
-    {
-        session_unset();
-        session_destroy();
-    }
+function setSession($userId)
+{
+    $_SESSION['userId'] = $userId;
+}
+
+function deleteSession()
+{
+    unset($_SESSION['username']);
+}
+
+function destroySession()
+{
+    session_unset();
+    session_destroy();
+}
 
 // auto start session for any file that includes us
 if (hasSessionStarted() == false) {

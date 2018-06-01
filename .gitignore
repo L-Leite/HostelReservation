@@ -1,2 +1,5 @@
 # ignore front-end dependencies
 public/vendor/
+
+# ignore php error logs
+*.log

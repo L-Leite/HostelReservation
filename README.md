@@ -8,17 +8,19 @@ By [Daniel Rocha](https://github.com/GODManiax) and [Luís Leite](https://github
 
 ## Credits
 
--   [Mark Otto](https://twitter.com/mdo) for the page templates
+- [Mark Otto](https://twitter.com/mdo) for the page templates
 
 ## Libraries used
 
--   [jQuery](https://jquery.com/)
--   [Popper.js](https://popper.js.org/)
--   [Bootstrap](https://getbootstrap.com/)
--   [crypto-js](https://github.com/brix/crypto-js)
+- [jQuery](https://jquery.com/)
+- [Popper.js](https://popper.js.org/)
+- [Bootstrap](https://getbootstrap.com/)
+- [crypto-js](https://github.com/brix/crypto-js)
+- [Velocity.js](http://velocityjs.org)
 
 ## Pictures used
 
--   ```hostel-1.png``` by [Booking](https://www.booking.com/)
--   ```hostel-2.png``` by [Mango Tree Hostel](http://mangotreehostel.com/)
--   ```cover-1.png``` by [Full Moon Hostel](http://www.fullmoonhostel.com/)
+- ```hostel-1.png``` by [Booking](https://www.booking.com/)
+- ```hostel-2.png``` by [Mango Tree Hostel](http://mangotreehostel.com/)
+- ```cover-1.png``` by [Full Moon Hostel](http://www.fullmoonhostel.com/)
+- ```default.svg``` by [rafael3334](https://www.onlinewebfonts.com/icon/450585), Icon made from [Icon Fonts](http://www.onlinewebfonts.com/icon) is licensed by CC BY 3.0
