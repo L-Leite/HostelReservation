@@ -7,6 +7,10 @@ require 'src/utils.php';
 $darkNavbar = true;
 
 try {
+    $todayDate = date('Y-m-d');
+    $tomorrowDate = date('Y-m-d', strtotime('+1 day'));
+    $maxDate = date('Y-m-d', strtotime('+14 day'));
+
     $isReservating = isPostVarSet('doReserve');
 
     if ($isReservating == true) {
@@ -22,7 +26,14 @@ try {
         $hostelId = getPostVar('hostelId');
         $startDate = getPostVar('startDate');
         $endDate = getPostVar('endDate');
-        $goodClient = $hostelDb->newReservation(
+
+        if ($startDate < $todayDate
+          || $endDate > $maxDate) {
+            echo json_encode(array('status' => 'badDate'));
+            die();
+        }
+
+        $hostelDb->newReservation(
             $userId,
             $hostelId,
             $startDate,
@@ -32,7 +43,7 @@ try {
         die();
     } if (isSessionSet() === true
         && isGetVarSet('id') === true
-    ) {        
+    ) {      
         $clientId = getSessionUser();
         $hostelId = getGetVar('id');
 
@@ -70,6 +81,9 @@ try {
 
   <!-- Bootstrap's CSS -->
   <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css" />
+  
+  <!-- Font-Awesome's CSS -->
+  <link rel="stylesheet" href="vendor/components-font-awesome/css/fontawesome-all.css">
 
   <!-- Base CSS -->
   <link href="styles/base.css" rel="stylesheet">
@@ -96,16 +110,22 @@ try {
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form method="POST">
+          <form id="reserveForm" method="POST">
             <div class="modal-body">
               <div class="form-group">
                 <label for="reserveStart">Início da reserva</label>
-                <input type="date" class="form-control"
+                <input type="date"
+                  min="<?php echo $todayDate; ?>"
+                  max="<?php echo $maxDate; ?>"
+                  class="form-control"
                   id="reserveStart" name="startDate" required>
               </div>   
               <div class="form-group">
                 <label for="reserveEnd">Fim da reserva</label>
-                <input type="date" class="form-control"
+                <input type="date"
+                  min="<?php echo $tomorrowDate; ?>"
+                  max="<?php echo $maxDate; ?>"
+                  class="form-control"
                   id="reserveEnd" name="endDate" required>
               </div>   
               <input type="hidden" name="userId"
@@ -182,8 +202,7 @@ try {
       $(this).find('.modal-dialog').velocity('transition.shrinkIn', {duration: 300})
     })
     // override default submit
-    $('#reserveModal').submit(function(e) {
-      console.log('teste')
+    $('#reserveForm').submit(function(e) {
       e.preventDefault()
 
       var form = e.target
@@ -202,7 +221,7 @@ try {
           var statusData = $.parseJSON(data)
           var status = statusData['status']
           if (status === 'ok') {
-            redirectToPage('list.php');
+            redirectToPage('list_reserved.php');
           }
           else {
             $('#errorContainer').show('fast')

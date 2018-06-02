@@ -114,7 +114,6 @@ try {
 
   <script>
     $('#loginForm').submit(function(e) {
-      console.log('teste')
       e.preventDefault()
 
       var form = e.target

@@ -24,9 +24,19 @@ $isLoggedIn = isSessionSet();
      <div class="navbar-collapse">
        <ul class="navbar-nav ml-auto">
          <li class="navbar-item">
-           <a class="navbar-link" href="index.php">Entrada</a>
+           <a class="navbar-link" href="index.php">Início</a>
          </li>
-<?php if ($isLoggedIn === true) {
+<?php if ($isLoggedIn === true) { 
+    if (getCurrentPage() === 'list.php') {
+        echo '<li class="navbar-item">
+              <a class="navbar-link" href="list_reserved.php">Reservas</a>
+            </li>';
+    } else {
+        echo '<li class="navbar-item">
+              <a class="navbar-link" href="list.php">Hosteis</a>
+            </li>';
+    }
+
     echo '<li class="navbar-item">
            <a class="navbar-link" href="logout.php">Sair</a>
          </li>';

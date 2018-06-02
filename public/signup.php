@@ -146,7 +146,6 @@ try {
 
   <script>
     $('#signupForm').submit(function(e) {
-      console.log('teste')
       e.preventDefault()
 
       var inputPassword = $('#inputPassword').val()

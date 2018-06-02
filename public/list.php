@@ -1,6 +1,8 @@
 <?php
 require '../config/www.php';
 require 'src/session.php';
+require 'src/utils.php';
+
 
 if (isSessionSet() === false) {
     header('Location: index.php');
@@ -30,8 +32,8 @@ $hostelsInfo = $hostelDb->getAllHostelsInfo();
   <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css" />
 
   <!-- Font-Awesome's CSS -->
-  <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css" />
-
+  <link rel="stylesheet" href="vendor/components-font-awesome/css/fontawesome-all.css">
+  
   <!-- Base CSS -->
   <link href="styles/base.css" rel="stylesheet">
 
@@ -49,7 +51,7 @@ $hostelsInfo = $hostelDb->getAllHostelsInfo();
     </div>
     <div class="album pb-5">
       <div class="container">
-        <div class="row">
+        <div class="row justify-content-cente">
 <?php
 foreach ($hostelsInfo as $h) {
     $hostelId = $h['id'];
@@ -57,6 +59,7 @@ foreach ($hostelsInfo as $h) {
     $hostelImageUrl = $imagesRoot . $h['image_url'];
     $hostelPrice = $h['room_price'];
     $hostelRooms = $h['rooms_available'];
+    $canReserve = $hostelDb->canReserve($hostelId, getSessionUser());
     include 'templates/hostel.php';
 }
 ?>

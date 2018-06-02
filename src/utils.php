@@ -26,3 +26,8 @@ function getPostVar($postVar)
 {
     return filter_input(INPUT_POST, $postVar);
 }
+
+function getCurrentPage()
+{
+    return basename($_SERVER['PHP_SELF']);
+}

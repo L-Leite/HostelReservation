@@ -1,6 +1,7 @@
 <?php
 require '../config/www.php';
 require 'src/session.php';
+require 'src/utils.php';
 
 if (isSessionSet() === true) {
     header('Location: index.php');
@@ -21,6 +22,9 @@ if (isSessionSet() === true) {
 
   <!-- Bootstrap's CSS -->
   <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css" />
+
+  <!-- Font-Awesome's CSS -->
+  <link rel="stylesheet" href="vendor/components-font-awesome/css/fontawesome-all.css">
 
   <!-- Base CSS -->
   <link rel="stylesheet" href="styles/base.css">
@@ -122,7 +126,7 @@ if (isSessionSet() === true) {
             o mais facilmente possível.
           </p>
           <p><a class="btn btn-primary btn-lg"
-            href="hostels.php" role="button">Ver hosteis &raquo;</a></p>
+            href="list.php" role="button">Ver hosteis &raquo;</a></p>
         </div>
       </div>
     </div>
