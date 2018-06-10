@@ -4,9 +4,17 @@ A web page to reserve hostels.
 
 This project will be presented as a professional aptitude test for our course.
 
-By [Daniel Rocha](https://github.com/GODManiax) and [Luís Leite](https://github.com/Ochii).
+By [Daniel Rocha](https://github.com/GODManiax), João Cerqueira and [Luís Leite](https://github.com/Ochii).
 
-Special thanks to teacher Gil Manuel de Carvalho.
+Thank you to teacher Gil Manuel de Carvalho for guiding us.
+
+## Setting up
+
+You must have [Composer](https://getcomposer.org/) and [Yarn](https://yarnpkg.com/) installed in your machine in order to obtain third party dependencies, follow each app's website instructions on how to obtain each.
+
+If your machine is running Windows, run the Powershell script ```setup.ps1```, else you should run ```setup.sh```.
+
+To import the MySQL table ```HostelReservation.sql```, run ```mysql -u [yourUser] [whateverElseYouNeed] < HostelReservation.sql```.
 
 ## Credits
 

@@ -1,0 +1,35 @@
+{% macro navItem(text, href) %}
+  <li class="navbar-item">
+    <a class="navbar-link" href="{{ href }}">{{ text }}</a>
+  </li>
+{% endmacro %}
+{% import _self as nav %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-xl navbar-togglable fixed-top
+  {{ navbarDark ? 'navbar-dark' : 'navbar-fixed-top' }}
+  ">
+  <div class="container">
+    <div class="navbar-brand">
+      <a href="index">
+        <img src="images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        HostelR
+      </a>
+    </div>
+    <div class="navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        {% block navItems %}
+          {{ nav.navItem('Início', './')}}
+          {% if curPage == 'list' %}
+            {{ nav.navItem('Reservas', 'reserved') }}
+          {% elseif curPage == 'reserved' %}
+            {{ nav.navItem('Hosteis', 'list') }}
+          {% endif %}
+          {% if loggedIn %}
+            {{ nav.navItem('Sair', 'logout') }}
+          {% endif %}
+        {% endblock %}
+    </ul>
+  </div>
+</div>
+</nav>

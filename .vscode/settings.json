@@ -1,0 +1,8 @@
+{
+    "phpcs.ignorePatterns": [
+        "cache/**/*",
+        "vendor/**/*"
+    ],
+    "phpcs.standard": "PSR2",
+    "twig-language-2.tabSize": 2
+}

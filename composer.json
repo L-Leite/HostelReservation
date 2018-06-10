@@ -1,0 +1,13 @@
+{
+  "name": "HostelReservation",
+  "description": "A web app to reserve hostels.",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/",
+      "Config\\": "config/"
+    }
+  },
+  "require": {
+    "twig/twig": "^2.0"
+  }
+}

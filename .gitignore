@@ -1,5 +1,11 @@
 # ignore front-end dependencies
 public/vendor/
 
+# ignore composer downloaded dependencies
+vendor/
+
+# ignore twig's cache
+cache/
+
 # ignore php error logs
 *.log

@@ -1,25 +1,39 @@
 <?php
+namespace App;
+
+use Config\DbConfig;
+
 // abstracts the data between us and the database
-class HostelReservation
+class Database
 {
-    public function __construct($dbConn)
+    public function __construct()
     {
-        $this->_dbConn = $dbConn;
+        $this->_dbConn = new \PDO(
+            'mysql:host=' . DbConfig::$dbHost . ';dbname=' . DbConfig::$dbName,
+            DbConfig::$dbUser,
+            DbConfig::$dbPassword,
+            array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+        );
+
+        $this->_dbConn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     //
     // Client
     //
-    public function getClient(&$outClient)
+    public function getClientDataById($clientId)
     {
-        $stmt = $this->_dbConn->prepare('SELECT * FROM client;');
+        $stmt = $this->_dbConn->prepare(
+            'SELECT * FROM client
+            WHERE id = :id;'
+        );
+        $stmt->bindValue(':id', $clientId);
 
         if (!$stmt->execute()) {
-            throw exception('getClient: não foi possível executar a query!');
+            throw exception('getClientDataById: não foi possível executar a query!');
         }
 
-        $outClient = $stmt->fetch();
-        return true;
+        return $stmt->fetch();
     }
 
     public function getNewClientId()
@@ -45,7 +59,7 @@ class HostelReservation
     public function loginClient($username, $password)
     {
         $stmt = $this->_dbConn->prepare('SELECT * FROM client WHERE username = :username');
-        $stmt->bindValue(':username', $username);        
+        $stmt->bindValue(':username', $username);
 
         if (!$stmt->execute()) {
             throw exception('getClientWithDetails: não foi possível executar a query!');
@@ -66,7 +80,7 @@ class HostelReservation
 
     public function newClient($firstName, $lastName, $address, $phoneNumber, $email, $username, $password)
     {
-        if ($this->doesUserExist($username) === true) {
+        if (self::doesUserExist($username) === true) {
             return false;
         }
 
@@ -148,7 +162,7 @@ class HostelReservation
     public function getAllHostelsInfo()
     {
         // make sure the available rooms are correct
-        $this->updateReservations();
+        self::updateReservations();
 
         $stmt = $this->_dbConn->prepare('SELECT * FROM hostel ORDER BY address;');
 
@@ -163,7 +177,7 @@ class HostelReservation
     public function getAllReservedHostelsInfo($clientId)
     {
         // make sure the available rooms are correct
-        $this->updateReservations();
+        self::updateReservations();
 
         $stmt = $this->_dbConn->prepare(
             'SELECT r.id, h.address, h.image_url,
@@ -202,11 +216,11 @@ class HostelReservation
     }
 
     public function hasFreeRooms($hostelId)
-    {   
+    {
         $stmt = $this->_dbConn->prepare(
             'SELECT * FROM hostel WHERE
             rooms_available > 0 AND id=:hostel_id'
-        );     
+        );
         $stmt->bindValue(':hostel_id', $hostelId);
 
         if (!$stmt->execute()) {
@@ -216,8 +230,8 @@ class HostelReservation
         }
 
         $outHostel = $stmt->fetch();
-        
-        return $outHostel != false;  
+
+        return $outHostel != false;
     }
 
     public function incrementAvailableRooms($hostelId)
@@ -225,7 +239,7 @@ class HostelReservation
         $stmt = $this->_dbConn->prepare(
             'SELECT rooms_available FROM hostel
             WHERE id=:hostel_id'
-        );     
+        );
         $stmt->bindValue(':hostel_id', $hostelId);
 
         if (!$stmt->execute()) {
@@ -235,16 +249,16 @@ class HostelReservation
         }
 
         $outHostel = $stmt->fetch();
-        $rooms = $outHostel['rooms_available'] + 1;   
+        $rooms = $outHostel['rooms_available'] + 1;
 
         $stmt = $this->_dbConn->prepare(
             'UPDATE hostel
             SET rooms_available = :rooms_available
             WHERE id=:hostel_id'
-        );   
-        $stmt->bindValue(':rooms_available', $rooms);     
-        $stmt->bindValue(':hostel_id', $hostelId); 
-        
+        );
+        $stmt->bindValue(':rooms_available', $rooms);
+        $stmt->bindValue(':hostel_id', $hostelId);
+
         if (!$stmt->execute()) {
             throw exception(
                 'incrementAvailableRooms: não foi possível executar a query!'
@@ -257,7 +271,7 @@ class HostelReservation
         $stmt = $this->_dbConn->prepare(
             'SELECT rooms_available FROM hostel
             WHERE id=:hostel_id'
-        );     
+        );
         $stmt->bindValue(':hostel_id', $hostelId);
 
         if (!$stmt->execute()) {
@@ -267,16 +281,16 @@ class HostelReservation
         }
 
         $outHostel = $stmt->fetch();
-        $rooms = $outHostel['rooms_available'] - 1;   
+        $rooms = $outHostel['rooms_available'] - 1;
 
         $stmt = $this->_dbConn->prepare(
             'UPDATE hostel
             SET rooms_available = :rooms_available
             WHERE id=:hostel_id'
-        );   
-        $stmt->bindValue(':rooms_available', $rooms);     
-        $stmt->bindValue(':hostel_id', $hostelId); 
-        
+        );
+        $stmt->bindValue(':rooms_available', $rooms);
+        $stmt->bindValue(':hostel_id', $hostelId);
+
         if (!$stmt->execute()) {
             throw exception(
                 'decrementAvailableRooms: não foi possível executar a query!'
@@ -301,14 +315,14 @@ class HostelReservation
         }
 
         $outHostel = $stmt->fetch();
-        
-        return $outHostel != false;        
+
+        return $outHostel != false;
     }
 
-    public function canReserve($hostelId, $clientId) 
+    public function canReserve($hostelId, $clientId)
     {
-        return $this->hasFreeRooms($hostelId) === true
-            && $this->isCurrentlyReserved($hostelId, $clientId) === false;
+        return self::hasFreeRooms($hostelId) === true
+        && self::isCurrentlyReserved($hostelId, $clientId) === false;
     }
 
     public function newHostel($address, $roomPrice, $roomsAvailable = 0)
@@ -378,8 +392,8 @@ class HostelReservation
         $reservations = $stmt->fetchAll();
 
         foreach ($reservations as $r) {
-            $this->incrementAvailableRooms($r['hostel_id']);
-            $this->disableReservation($r['id']);
+            self::incrementAvailableRooms($r['hostel_id']);
+            self::disableReservation($r['id']);
         }
     }
 
@@ -396,7 +410,7 @@ class HostelReservation
                 'getReservation: não foi possível executar a query!'
             );
         }
-        
+
         return $stmt->fetch();
     }
 
@@ -434,7 +448,7 @@ class HostelReservation
             throw exception('newReservation: não foi possível executar a query!');
         }
 
-        $this->decrementAvailableRooms($hostelId);
+        self::decrementAvailableRooms($hostelId);
     }
 
     public function editReservation(
@@ -484,10 +498,10 @@ class HostelReservation
         }
 
         $reserve = $stmt->fetch();
-        $this->incrementAvailableRooms($reserve['hostel_id']);
+        self::incrementAvailableRooms($reserve['hostel_id']);
 
         $stmt = $this->_dbConn->prepare('DELETE FROM reservation WHERE id = :id;');
-        $stmt->bindValue(':id', $reservationId);        
+        $stmt->bindValue(':id', $reservationId);
 
         if (!$stmt->execute()) {
             throw exception('removeReservation: não foi possível executar a query!');

@@ -1,0 +1,32 @@
+{% set navbarDark = true %}
+{% extends "base.twig" %}
+
+{% block main %}
+  <main role="main" class="bg-light py-5 mt-md-5">
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+      <h1 class="display-4">As suas reservas</h1>
+      <p class="lead">A lista de todos os hosteis que tem reservados.</p>
+      {% if reserveInfo | length <= 0 %}
+        <p class="lead text-primary">Não tem reservas!</p>
+      {% else %}
+        <p class="lead text-primary">Pode cancelar a sua reserva a qualquer altura!</p>
+      {% endif %}
+    </div>
+    {% if reserveInfo | length > 0 %}
+      <div class="album pb-5">
+        <div class="container">
+          <div class="row justify-content-center">
+            {% for r in reserveInfo %}
+              {% set hostelAddress = r.address %}
+              {% set hostelImageUrl = imgRoot ~ r.image_url %}
+              {% set reserveId = r.id %}
+              {% set reserveStart = r.reservation_start %}
+              {% set reserveEnd = r.reservation_end %}
+              {{ include('@client/reserved_item.twig') }}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </main>
+{% endblock %}

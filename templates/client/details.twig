@@ -1,0 +1,119 @@
+{% set navbarDark = true %}
+{% extends "base.twig" %}
+
+{% block main %}
+  <main role="main" class="bg-light py-5 mt-md-5">
+    <!-- Modal -->
+    <div class="modal" id="reserveModal" tabindex="-1" role="dialog" aria-labelledby="reserveModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content text-white">
+          <div class="modal-header bg-dark">
+            <h5 class="modal-title" id="reserveModalLabel">
+              Reserva de
+              {{ hostel.address }}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="reserveForm" method="POST">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="reserveStart">Início da reserva</label>
+                <input type="date" min="{{ todayDate }}" max="{{ maxDate }}" class="form-control" id="reserveStart" name="startDate" required="required">
+              </div>
+              <div class="form-group">
+                <label for="reserveEnd">Fim da reserva</label>
+                <input type="date" min="{{ tomorrowDate }}" max="{{ maxDate }}" class="form-control" id="reserveEnd" name="endDate" required="required">
+              </div>
+              <input type="hidden" name="userId" value="{{ clientId }}">
+              <input type="hidden" name="hostelId" value="{{ hostelId }}">
+              <input type="hidden" name="doReserve" value="1">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Voltar
+              </button>
+              <button type="submit" class="btn btn-primary text-white">
+                Reservar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="card my-5">
+        <div class="card-background" style="background-image: url('./{{ imgRoot ~ hostel.image_url }}')"></div>
+        <div class="card-body">
+          <h5 class="card-title">{{ hostel.address }}</h5>
+          <p class="card-text">{{ hostel.description }}</p>
+          <p class="card-text mb-0">
+            <small class="text-muted">
+              Quartos disponíveis:
+              {{ hostel.rooms_available }}
+            </small>
+          </p>
+          <p class="card-text">
+            <small class="text-muted">
+              Preço de renda:
+              {{ hostel.room_price }}
+            </small>
+          </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reserveModal">
+                Reservar
+              </button>
+            </div>
+            <div class="btn-group">
+              <a type="button" class="btn btn-secondary" href="list.php">Voltar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <!-- jQuery -->
+  <script src="vendor/jquery/dist/jquery.min.js"></script>
+
+  <!-- Bootstrap and its dependencies -->
+  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
+  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!-- Velocity.js for animations -->
+  <script src="vendor/velocity-animate/velocity.min.js"></script>
+  <script src="vendor/velocity-animate/velocity.ui.min.js"></script>
+
+  <!-- So we can redirect page -->
+  <script src="js/utils.js"></script>
+
+  <script>
+    // animates the modal
+    $('#reserveModal').on('show.bs.modal', function (e) {
+      $(this).find('.modal-dialog').velocity('transition.shrinkIn', {duration: 300})
+    })
+    // override default submit
+    $('#reserveForm').submit(function (e) {
+      e.preventDefault()
+      var form = e.target
+      var postData = getFormVars(form)
+      $
+        .post(form.action, postData)
+        .done(function (data) {
+          var statusData = $.parseJSON(data)
+          if (statusData['status'] === 'ok') {
+            redirectToPage('reserved');
+          } else {
+            showMessageTo('#errorContainer', 'Ocorreu um erro ao reservar.')
+          }
+        })
+        .fail(function () {
+          showMessageTo('#errorContainer', 'Ocorreu um erro ao reservar.')
+        })
+    })
+  </script>
+{% endblock %}

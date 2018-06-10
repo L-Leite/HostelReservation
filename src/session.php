@@ -31,8 +31,3 @@ function destroySession()
     session_unset();
     session_destroy();
 }
-
-// auto start session for any file that includes us
-if (hasSessionStarted() == false) {
-    session_start();
-}

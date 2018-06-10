@@ -1,0 +1,30 @@
+{% extends '@client/list_item.twig' %}
+
+{% block cardBody %}
+  <p class="card-text mb-0">
+    De
+    <span class="text-success">
+      {{ reserveStart }}
+    </span>
+    a
+    <span class="text-success">
+      {{ reserveEnd }}
+    </span>
+    .
+  </p>
+  <p class="card-text text-muted">
+    Reservado!
+  </p>
+  <form method="POST">
+    <div class="d-flex justify-content-end align-items-right">
+      <div class="btn-group">
+        <button type="submit" class="btn btn-sm btn-primary">
+          Cancelar &raquo
+        </button>
+      </div>
+    </div>
+    <input type="hidden" name="id" value="{{ reserveId }}">
+    <input type="hidden" name="doDelete" value="1">
+  </form>
+</div>
+{% endblock %}
