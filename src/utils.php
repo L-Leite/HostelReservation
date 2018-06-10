@@ -30,15 +30,35 @@ function getCurrentPage()
     return basename($_SERVER['PHP_SELF']);
 }
 
-function getRequestedPath($url)
+function getRequestedPath()
 {
-    $paths = explode('/', $url);
+    $paths = explode('/', $_SERVER['REQUEST_URI']);
 
     $desiredIndex = $GLOBALS['dirDistance'] + 1;
 
     if (sizeof($paths) > $desiredIndex + 1) {
         return false;
     }
+
+    $getStart = strpos($paths[$desiredIndex], '?');
+
+    return substr($paths[$desiredIndex], 0, $getStart ? $getStart : strlen($paths[$desiredIndex]));
+}
+
+function isAdminRequest()
+{
+    $paths = explode('/', $_SERVER['REQUEST_URI']);
+    $desiredIndex = $GLOBALS['dirDistance'] + 1;
+
+    $getStart = strpos($paths[$desiredIndex], '?');
+
+    return $paths[$desiredIndex] === 'admin';
+}
+
+function getAdminRequest()
+{
+    $paths = explode('/', $_SERVER['REQUEST_URI']);
+    $desiredIndex = $GLOBALS['dirDistance'] + 2;
 
     $getStart = strpos($paths[$desiredIndex], '?');
 

@@ -8,14 +8,14 @@ class Database
 {
     public function __construct()
     {
-        $this->_dbConn = new \PDO(
+        $this->dbConn = new \PDO(
             'mysql:host=' . DbConfig::$dbHost . ';dbname=' . DbConfig::$dbName,
             DbConfig::$dbUser,
             DbConfig::$dbPassword,
             array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
         );
 
-        $this->_dbConn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->dbConn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     //
@@ -23,7 +23,7 @@ class Database
     //
     public function getClientDataById($clientId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT * FROM client
             WHERE id = :id;'
         );
@@ -38,18 +38,18 @@ class Database
 
     public function getNewClientId()
     {
-        return $this->_dbConn->lastInsertId();
+        return $this->dbConn->lastInsertId();
     }
 
     public function doesUserExist($username)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT * FROM client WHERE username = :username;'
         );
         $stmt->bindValue(':username', $username);
 
         if (!$stmt->execute()) {
-            throw exception('getClient: não foi possível executar a query!');
+            throw exception('doesUserExist: não foi possível executar a query!');
         }
 
         $outClient = $stmt->fetch();
@@ -58,11 +58,11 @@ class Database
 
     public function loginClient($username, $password)
     {
-        $stmt = $this->_dbConn->prepare('SELECT * FROM client WHERE username = :username');
+        $stmt = $this->dbConn->prepare('SELECT * FROM client WHERE username = :username');
         $stmt->bindValue(':username', $username);
 
         if (!$stmt->execute()) {
-            throw exception('getClientWithDetails: não foi possível executar a query!');
+            throw exception('loginClient: não foi possível executar a query!');
         }
 
         $outClient = $stmt->fetch();
@@ -80,13 +80,13 @@ class Database
 
     public function newClient($firstName, $lastName, $address, $phoneNumber, $email, $username, $password)
     {
-        if (self::doesUserExist($username) === true) {
+        if ($this->doesUserExist($username) === true) {
             return false;
         }
 
         $password = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'INSERT INTO client(first_name,last_name,address,
             phone_number,email,username,password)
             VALUES (:first_name,:last_name,:address,
@@ -109,7 +109,7 @@ class Database
 
     public function editClient($clientId, $firstName, $lastName, $address, $phoneNumber, $email)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'UPDATE client SET first_name = :first_name, last_name = :last_name,
             address = :address, phone_number = :phone_number, email = :email,
             username :username, password = :password
@@ -131,7 +131,7 @@ class Database
 
     public function removeClient($clientId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'DELETE FROM client
             WHERE client_id = :client_id;'
         );
@@ -145,11 +145,46 @@ class Database
     }
 
     //
+    // admin
+    //
+    private function updateAdminDate($adminId)
+    {
+        $stmt = $this->dbConn->prepare('UPDATE admin SET last_login = CURRENT_TIMESTAMP() WHERE id = :id');
+        $stmt->bindValue(':id', $adminId);
+
+        if (!$stmt->execute()) {
+            throw exception('updateAdmins: não foi possível executar a query!');
+        }
+    }
+
+    public function loginAdmin($username, $password)
+    {
+        $stmt = $this->dbConn->prepare('SELECT * FROM admin WHERE username = :username');
+        $stmt->bindValue(':username', $username);
+
+        if (!$stmt->execute()) {
+            throw exception('loginAdmin: não foi possível executar a query!');
+        }
+
+        $outAdmin = $stmt->fetch();
+
+        if ($outAdmin == false) {
+            return 0;
+        }
+
+        if (password_verify($password, $outAdmin['password'])) {
+            return $outAdmin['id'];
+        } else {
+            return 0;
+        }
+    }
+
+    //
     // hostel
     //
     public function getHostel()
     {
-        $stmt = $this->_dbConn->prepare('SELECT * FROM hostel;');
+        $stmt = $this->dbConn->prepare('SELECT * FROM hostel;');
 
         if (!$stmt->execute()) {
             throw exception('getHostel: não foi possível executar a query!');
@@ -162,9 +197,9 @@ class Database
     public function getAllHostelsInfo()
     {
         // make sure the available rooms are correct
-        self::updateReservations();
+        $this->updateReservations();
 
-        $stmt = $this->_dbConn->prepare('SELECT * FROM hostel ORDER BY address;');
+        $stmt = $this->dbConn->prepare('SELECT * FROM hostel ORDER BY address;');
 
         if (!$stmt->execute()) {
             throw exception('getAllHostelsInfo: não foi possível executar a query!');
@@ -174,12 +209,37 @@ class Database
         return $outHostel;
     }
 
-    public function getAllReservedHostelsInfo($clientId)
+    public function getAllReservedHostelsInfo()
     {
         // make sure the available rooms are correct
-        self::updateReservations();
+        $this->updateReservations();
+        $this->updateAdminDate(getSessionAdmin());
 
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
+            'SELECT h.address, c.first_name, c.last_name, r.reservation_start,
+            r.reservation_end, h.image_url, r.created_date, r.disabled
+            FROM `reservation` AS r
+            INNER JOIN client AS c ON r.client_id = c.id
+            INNER JOIN hostel AS h ON r.hostel_id = h.id
+            ORDER BY h.address, r.reservation_start, r.reservation_end, c.last_name, c.first_name;'
+        );
+
+        if (!$stmt->execute()) {
+            throw exception(
+                'getAllReservedHostelsInfo: não foi possível executar a query!'
+            );
+        }
+
+        $outHostel = $stmt->fetchAll();
+        return $outHostel;
+    }
+
+    public function getAllReservedHostelsInfoByClient($clientId)
+    {
+        // make sure the available rooms are correct
+        $this->updateReservations();
+
+        $stmt = $this->dbConn->prepare(
             'SELECT r.id, h.address, h.image_url,
             r.created_date, r.reservation_start, r.reservation_end
             FROM reservation AS r
@@ -192,7 +252,7 @@ class Database
 
         if (!$stmt->execute()) {
             throw exception(
-                'getAllReservedHostelsInfo: não foi possível executar a query!'
+                'getAllReservedHostelsInfoByClient: não foi possível executar a query!'
             );
         }
 
@@ -202,7 +262,7 @@ class Database
 
     public function getHostelInfo($hostelId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT * FROM hostel WHERE id = :id ORDER BY address;'
         );
         $stmt->bindValue(':id', $hostelId);
@@ -217,7 +277,7 @@ class Database
 
     public function hasFreeRooms($hostelId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT * FROM hostel WHERE
             rooms_available > 0 AND id=:hostel_id'
         );
@@ -236,7 +296,7 @@ class Database
 
     public function incrementAvailableRooms($hostelId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT rooms_available FROM hostel
             WHERE id=:hostel_id'
         );
@@ -251,7 +311,7 @@ class Database
         $outHostel = $stmt->fetch();
         $rooms = $outHostel['rooms_available'] + 1;
 
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'UPDATE hostel
             SET rooms_available = :rooms_available
             WHERE id=:hostel_id'
@@ -268,7 +328,7 @@ class Database
 
     public function decrementAvailableRooms($hostelId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT rooms_available FROM hostel
             WHERE id=:hostel_id'
         );
@@ -283,7 +343,7 @@ class Database
         $outHostel = $stmt->fetch();
         $rooms = $outHostel['rooms_available'] - 1;
 
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'UPDATE hostel
             SET rooms_available = :rooms_available
             WHERE id=:hostel_id'
@@ -300,7 +360,7 @@ class Database
 
     public function isCurrentlyReserved($hostelId, $clientId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT * FROM reservation WHERE
             client_id=:client_id AND hostel_id=:hostel_id
             AND reservation_start >= DATE(NOW());'
@@ -321,13 +381,13 @@ class Database
 
     public function canReserve($hostelId, $clientId)
     {
-        return self::hasFreeRooms($hostelId) === true
-        && self::isCurrentlyReserved($hostelId, $clientId) === false;
+        return $this->hasFreeRooms($hostelId) === true
+        && $this->isCurrentlyReserved($hostelId, $clientId) === false;
     }
 
     public function newHostel($address, $roomPrice, $roomsAvailable = 0)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'INSERT INTO hostelgrade(address,room_price,rooms_available)
             VALUES(:address,:room_price,:rooms_available);'
         );
@@ -344,7 +404,7 @@ class Database
 
     public function editHostel($hostelId, $address, $roomPrice, $roomsAvailable)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'UPDATE hostel SET address = :address
             room_price = :room_price, rooms_available = :rooms_available
             WHERE id = :hostel_id;'
@@ -364,7 +424,7 @@ class Database
 
     public function removeHostel($hostelId)
     {
-        $stmt = $this->_dbConn->prepare('DELETE FROM hostel WHERE id = :hostel_id');
+        $stmt = $this->dbConn->prepare('DELETE FROM hostel WHERE id = :hostel_id');
         $stmt->bindValue(':hostel_id', $hostelId);
 
         if (!$stmt->execute()) {
@@ -379,7 +439,7 @@ class Database
     //
     public function updateReservations()
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT * FROM reservation
             WHERE reservation_end < DATE(NOW())
             AND disabled = false;'
@@ -392,14 +452,14 @@ class Database
         $reservations = $stmt->fetchAll();
 
         foreach ($reservations as $r) {
-            self::incrementAvailableRooms($r['hostel_id']);
-            self::disableReservation($r['id']);
+            $this->incrementAvailableRooms($r['hostel_id']);
+            $this->disableReservation($r['id']);
         }
     }
 
     public function getReservation($reserveId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'SELECT * FROM reservation
             WHERE id=:id;'
         );
@@ -416,7 +476,7 @@ class Database
 
     public function getReservations()
     {
-        $stmt = $this->_dbConn->prepare('SELECT * FROM reservation;');
+        $stmt = $this->dbConn->prepare('SELECT * FROM reservation;');
 
         if (!$stmt->execute()) {
             throw exception(
@@ -428,11 +488,9 @@ class Database
         return $outReservations;
     }
 
-    public function newReservation(
-        $clientId, $hostelId, $reservationStart,
-        $reservationEnd
-    ) {
-        $stmt = $this->_dbConn->prepare(
+    public function newReservation($clientId, $hostelId, $reservationStart, $reservationEnd)
+    {
+        $stmt = $this->dbConn->prepare(
             'INSERT INTO reservation(client_id,hostel_id,reservation_start,
             reservation_end)
             VALUES(:client_id,:hostel_id,:reservation_start,
@@ -448,14 +506,12 @@ class Database
             throw exception('newReservation: não foi possível executar a query!');
         }
 
-        self::decrementAvailableRooms($hostelId);
+        $this->decrementAvailableRooms($hostelId);
     }
 
-    public function editReservation(
-        $reservationId, $clientId, $hostelId, $reservationStart,
-        $reservationEnd
-    ) {
-        $stmt = $this->_dbConn->prepare(
+    public function editReservation($reservationId, $clientId, $hostelId, $reservationStart, $reservationEnd)
+    {
+        $stmt = $this->dbConn->prepare(
             'UPDATE reservation SET client_id = :client_id,
             hostel_id = :hostel_id,
             reservation_start = :reservation_start,
@@ -476,7 +532,7 @@ class Database
 
     public function disableReservation($reservationId)
     {
-        $stmt = $this->_dbConn->prepare(
+        $stmt = $this->dbConn->prepare(
             'UPDATE reservation
             SET disabled = true
             WHERE id = :id;'
@@ -490,7 +546,7 @@ class Database
 
     public function removeReservation($reservationId)
     {
-        $stmt = $this->_dbConn->prepare('SELECT * FROM reservation WHERE id = :id;');
+        $stmt = $this->dbConn->prepare('SELECT * FROM reservation WHERE id = :id;');
         $stmt->bindValue(':id', $reservationId);
 
         if (!$stmt->execute()) {
@@ -498,9 +554,9 @@ class Database
         }
 
         $reserve = $stmt->fetch();
-        self::incrementAvailableRooms($reserve['hostel_id']);
+        $this->incrementAvailableRooms($reserve['hostel_id']);
 
-        $stmt = $this->_dbConn->prepare('DELETE FROM reservation WHERE id = :id;');
+        $stmt = $this->dbConn->prepare('DELETE FROM reservation WHERE id = :id;');
         $stmt->bindValue(':id', $reservationId);
 
         if (!$stmt->execute()) {
@@ -509,5 +565,5 @@ class Database
     }
 
     // db connection
-    private $_dbConn;
+    private $dbConn;
 }

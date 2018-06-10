@@ -1,5 +1,5 @@
 <?php
-namespace App\Model;
+namespace App\Model\Client;
 
 use App\Model\BaseModel;
 
@@ -24,14 +24,14 @@ class ReservedModel extends BaseModel
        
         $id = getPostVar('id');
         
-        $reserveInfo = $this->_db->getReservation($id);
+        $reserveInfo = $this->db->getReservation($id);
 
         if ($reserveInfo['client_id'] != getSessionUser()) {
             $this->sendStatus('error', 'invalidClient');
             return false;
         }
 
-        $this->_db->removeReservation($id);
+        $this->db->removeReservation($id);
 
         $this->sendStatus('ok');
         return true;
@@ -39,6 +39,6 @@ class ReservedModel extends BaseModel
 
     public function getData()
     {
-        return $this->_db->getAllReservedHostelsInfo(getSessionUser());
+        return $this->db->getAllReservedHostelsInfoByClient(getSessionUser());
     }
 }

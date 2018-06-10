@@ -1,8 +1,8 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Client;
 
 use App\Controller\BaseController;
-use App\Model\LoginModel;
+use App\Model\Client\LoginModel;
 
 class LoginController extends BaseController
 {

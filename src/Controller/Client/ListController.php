@@ -1,8 +1,8 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Client;
 
 use App\Controller\BaseController;
-use App\Model\ListModel;
+use App\Model\Client\ListModel;
 
 class ListController extends BaseController
 {
@@ -19,7 +19,7 @@ class ListController extends BaseController
 
     public function render()
     {
-        $hostelData = $this->model->getData();        
+        $hostelData = $this->model->getData();
         echo $this->twigEnv->render(
             '@client/list.twig',
             array('pageTitle' => 'Lista de hosteis', 'hostels' => $hostelData)

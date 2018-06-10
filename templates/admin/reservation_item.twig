@@ -1,0 +1,35 @@
+<div class="col-lg-4 col-sm-6">
+  <div class="card mb-4">
+    <div class="card-body">
+      <img class="card-img-top mb-3" alt="{{ hostelAddress }}" src="{{ hostelImageUrl }}">
+      <p class="card-text text-primary mb-0">{{ hostelAddress }}</p>
+      {% block cardBody %}
+        <p class="card-text mb-0">
+          Reservado por:
+          <span class="text-success">
+            {{ firstName }}
+            {{ lastName }}
+          </span>
+        </p>
+        <p class="card-text mb-0">
+          De
+          <span class="text-success">
+            {{ reserveStart }}
+          </span>
+          a
+          <span class="text-success">
+            {{ reserveEnd }}
+          </span>
+          .
+        </p>
+        <p class="card-text mb-0">
+          Reservado a
+          <span class="text-success">
+            {{ createdDate }}
+          </span>
+          .
+        </p>
+      {% endblock %}
+    </div>
+  </div>
+</div>

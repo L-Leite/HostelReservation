@@ -13,7 +13,7 @@ class BaseController
 
     public function shouldRender()
     {
-        return $this->model->isPost();
+        throw new \Exception('shouldRender: Implement me!');
     }
 
     public function render()

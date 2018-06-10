@@ -1,5 +1,5 @@
 <?php
-namespace App\Model;
+namespace App\Model\Client;
 
 use App\Model\BaseModel;
 
@@ -34,7 +34,7 @@ class SignupModel extends BaseModel
         $phoneNumber = isPostVarSet('phone') ? getPostVar('phone') : null;
         $email = isPostVarSet('email') ? getPostVar('email') : null;
 
-        $createdUser = $this->_db->newClient(
+        $createdUser = $this->db->newClient(
             $firstName,
             $lastName,
             $address,
@@ -49,7 +49,7 @@ class SignupModel extends BaseModel
             return false;
         }
         
-        setSession($this->_db->getNewClientId());
+        setSession($this->db->getNewClientId());
         $this->sendStatus('ok');
         return true;
     }

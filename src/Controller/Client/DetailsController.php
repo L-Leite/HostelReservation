@@ -1,8 +1,8 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Client;
 
 use App\Controller\BaseController;
-use App\Model\DetailsModel;
+use App\Model\Client\DetailsModel;
 
 class DetailsController extends BaseController
 {

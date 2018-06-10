@@ -71,6 +71,7 @@ body {
 .card-background {
   background-position: center;
   background-repeat: no-repeat;
+  background-size: cover;
   height: 14em;
   opacity: 0.9;
 }
@@ -96,9 +97,17 @@ body {
   background-color: #444;
 }
 
+.modal-body.bg-danger {
+  background-color: #b1313d !important;
+}
+
 .modal-footer {
   background-color: #444;
   border-top: 0;
+}
+
+.modal-footer.bg-danger {
+  background-color: #b1313d !important;
 }
 
 /* navbar */

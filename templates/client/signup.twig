@@ -1,4 +1,4 @@
-{% extends "base.twig" %}
+{% extends "@client/base.twig" %}
 
 {% block stylesheets %}
   <!-- Bootstrap's CSS -->
@@ -49,10 +49,10 @@
       <input type="hidden" name="doSignup" value="1">
       <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Criar conta</button>
       <p class="mb-0">
-        <a href="login.php">Já tenho conta</a>
+        <a href="login">Já tenho conta</a>
       </p>
       <p>
-        <a href="index.php">Voltar para pagina inicial</a>
+        <a href="cover">Voltar para pagina inicial</a>
       </p>
     </form>
   </main>
@@ -92,7 +92,7 @@
           var statusData = $.parseJSON(data)
           var status = statusData['status']
           if (status === 'ok') {
-            redirectToPage('list.php');
+            redirectToPage('list');
           } else {
             var message = statusData['message']
 

@@ -5,11 +5,11 @@ use App\Database;
 
 class BaseModel
 {
-    protected $_db;
+    protected $db;
 
     public function __construct()
     {
-        $this->_db = new Database();
+        $this->db = new Database();
     }
 
     public function isPost()

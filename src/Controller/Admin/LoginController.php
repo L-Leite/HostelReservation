@@ -1,15 +1,15 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
-use App\Model\SignupModel;
+use App\Model\Admin\LoginModel;
 
-class SignupController extends BaseController
+class LoginController extends BaseController
 {
     public function __construct($twigEnv)
     {
         parent::__construct($twigEnv);
-        $this->model = new SignupModel();
+        $this->model = new LoginModel();
     }
 
     public function shouldRender()
@@ -20,8 +20,8 @@ class SignupController extends BaseController
     public function render()
     {
         echo $this->twigEnv->render(
-            '@client/signup.twig',
-            array('pageTitle' => 'Criar conta')
+            '@admin/login.twig',
+            array('pageTitle' => 'Entrar')
         );
     }
 

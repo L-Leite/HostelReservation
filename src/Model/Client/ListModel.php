@@ -1,5 +1,5 @@
 <?php
-namespace App\Model;
+namespace App\Model\Client;
 
 use App\Model\BaseModel;
 
@@ -7,10 +7,10 @@ class ListModel extends BaseModel
 {
     public function getData()
     {
-        $data = $this->_db->getAllHostelsInfo();
+        $data = $this->db->getAllHostelsInfo();
 
         foreach ($data as &$d) {
-            $d['canReserve'] = $this->_db->canReserve($d['id'], getSessionUser());
+            $d['canReserve'] = $this->db->canReserve($d['id'], getSessionUser());
         }
 
         return $data;

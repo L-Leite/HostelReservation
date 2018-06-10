@@ -1,5 +1,5 @@
 <?php
-namespace App\Model;
+namespace App\Model\Admin;
 
 use App\Model\BaseModel;
 
@@ -25,17 +25,18 @@ class LoginModel extends BaseModel
 
         $username = getPostVar('username');
         $password = getPostVar('password');
-        $userId = $this->_db->loginClient(
+
+        $adminId = $this->db->loginAdmin(
             $username,
             $password
         );
 
-        if ($userId == null) {
-            $this->sendStatus('error', 'badClient');
+        if ($adminId == null) {
+            $this->sendStatus('error', 'badAdmin');
             return false;
         }
-        
-        setSession($userId);
+
+        setAdminSession($adminId);
         $this->sendStatus('ok');
         return true;
     }

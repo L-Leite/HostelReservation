@@ -1,5 +1,5 @@
 <?php
-namespace App\Model;
+namespace App\Model\Client;
 
 use App\Model\BaseModel;
 
@@ -34,12 +34,13 @@ class DetailsModel extends BaseModel
         $tomorrowDate = date('Y-m-d', strtotime('+1 day'));
         $maxDate = date('Y-m-d', strtotime('+14 day'));
 
-        if ($startDate < $todayDate || $endDate > $maxDate) {
+        if ($startDate < $todayDate || $endDate > $maxDate
+            || $endDate < $startDate || $startDate > $endDate) {
             $this->sendStatus('error', 'invalidDate');
             return false;
         }
 
-        $this->_db->newReservation($userId, $hostelId, $startDate, $endDate );
+        $this->db->newReservation($userId, $hostelId, $startDate, $endDate);
         
         $this->sendStatus('ok');
         return true;
@@ -47,7 +48,7 @@ class DetailsModel extends BaseModel
 
     public function getData()
     {
-        $data = $this->_db->getHostelInfo(getGetVar('id'));
+        $data = $this->db->getHostelInfo(getGetVar('id'));
         return $data;
     }
 }

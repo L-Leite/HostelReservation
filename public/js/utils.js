@@ -21,3 +21,9 @@ function showMessageTo(target, message) {
     .find('span')
     .html(message)
 }
+
+function showModalError(modal, message) {
+  $(modal).find('.modal-body p').text(message)
+  $('.modal:visible').modal('hide');
+  $(modal).modal('show')
+}

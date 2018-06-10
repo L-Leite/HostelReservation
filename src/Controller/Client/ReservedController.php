@@ -1,8 +1,8 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Client;
 
 use App\Controller\BaseController;
-use App\Model\ReservedModel;
+use App\Model\Client\ReservedModel;
 
 class ReservedController extends BaseController
 {
@@ -19,7 +19,7 @@ class ReservedController extends BaseController
 
     public function render()
     {
-        $reserveData = $this->model->getData();        
+        $reserveData = $this->model->getData();
         echo $this->twigEnv->render(
             '@client/reserved.twig',
             array('pageTitle' => 'Hosteis reservados', 'reserveInfo' => $reserveData, 'disabled' => 0)

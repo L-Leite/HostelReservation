@@ -1,4 +1,4 @@
-{% extends "@client/base.twig" %}
+{% extends "@admin/base.twig" %}
 
 {% block stylesheets %}
   <!-- Bootstrap's CSS -->
@@ -19,24 +19,18 @@
   <main class="text-center">
     <form class="form-signin" id="loginForm" method="POST">
       <img class="mb-4" src="images/logo.png" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">Entre na sua conta</h1>
+      <h1 class="h3 mb-3 font-weight-normal">Administração</h1>
       <div id="errorContainer" class="alert alert-danger" style="display:none;">
         <span></span>
       </div>
       <div class="form-group">
-        <label for="inputUsername" class="sr-only">Nome de utilizador</label>
+        <label for="inputUsername" class="sr-only">Nome do administrator</label>
         <input type="text" id="inputUsername" name="username" class="form-control" placeholder="O seu nome de utilizador" required="required">
         <label for="inputPassword" class="sr-only">Palavra-passe</label>
         <input type="password" id="inputPassword" name="password" class="form-control" placeholder="A sua palavra-passe" required="required">
       </div>
       <input type="hidden" name="doLogin" value="1">
       <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Entrar</button>
-      <p class="mb-0">
-        <a href="signup">Ainda não tenho conta</a>
-      </p>
-      <p>
-        <a href="cover">Voltar para pagina inicial</a>
-      </p>
     </form>
   </main>
 {% endblock %}
@@ -68,16 +62,16 @@
       $.post(form.action, postData).done(function (data) {
         var statusData = $.parseJSON(data)
         if (statusData['status'] === 'ok') {
-          redirectToPage('list');
+          redirectToPage('admin/reservations');
         } else {
           if (statusData['message'] === 'badClient') {
             showMessageTo('#errorContainer', 'Por favor insira a sua informação corretamente.')
           } else {
-            showMessageTo('#errorContainer', 'Ocorreu um erro ao criar a sua conta.')
+            showMessageTo('#errorContainer', 'Ocorreu um erro ao entrar na sua conta.')
           }
         }
       }).fail(function () {
-        showMessageTo('#errorContainer', 'Ocorreu um erro ao criar a sua conta.')
+        showMessageTo('#errorContainer', 'Ocorreu um erro ao entrar na sua conta.')
       })
     })
   </script>
