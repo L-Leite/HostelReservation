@@ -19,7 +19,6 @@
     <div class="navbar-collapse">
       <ul class="navbar-nav ml-auto">
         {% block navItems %}
-          {{ nav.navItem('Início', 'admin')}}
           {% if loggedIn %}
             {{ nav.navItem('Sair', 'admin/logout') }}
           {% endif %}
