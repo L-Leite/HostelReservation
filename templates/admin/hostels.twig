@@ -1,0 +1,64 @@
+{% set navbarDark = true %}
+{% extends "@admin/base.twig" %}
+
+{% block main %}
+  <main role="main" class="bg-light py-5 mt-5">
+    {% include '@admin/hostels_delete_modal.twig' %}
+    {% include 'errorModal.twig' %}
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mt-5 mx-auto text-center">
+      <h1 class="display-4">Hosteis</h1>
+    </div>
+    <div class="album pb-5">
+      <div class="container">
+        <div class="row mb-3">
+          <div class="col-auto">
+            <a type="button" class="btn btn-lg btn-primary" href="./admin/new_hostel">
+              Criar novo hostel &raquo
+            </a>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          {% for h in hostels %}
+            {% set hostelId = h.id %}
+            {% set hostelAddress = h.address %}
+            {% set hostelImageUrl = imgRoot ~ h.image_url %}
+            {% set hostelPrice = h.room_price %}
+            {% set hostelRooms = h.rooms_available %}
+            {{ include('@admin/hostels_item.twig') }}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+
+  <script>
+    // when the delete button is clicked
+    $('.deleteHostel').click(function (e) {
+      var hostel = $(this).data('hostel')
+      console.log(hostel)
+      $('#deleteHostelId').val(hostel)
+    })
+    // override default submit
+    $('#deleteModal').submit(function (e) {
+      e.preventDefault()
+      var form = e.target
+      var postData = getFormVars(form)
+      $
+        .post(form.action, postData)
+        .done(function (data) {
+          if (data['status'] === 'ok') {
+            redirectToPage('./admin/hostels');
+          } else {
+            showModalError('#errorModal', getErrorMessage(data['message']))
+          }
+        })
+        .fail(function () {
+          showModalError('#errorModal', getErrorMessage(null))
+        })
+    })
+  </script>
+{% endblock %}

@@ -43,42 +43,28 @@
 {% block footer %}{% endblock %}
 
 {% block scripts %}
-  <!-- jQuery -->
-  <script src="vendor/jquery/dist/jquery.min.js"></script>
-
-  <!-- Bootstrap and its dependencies -->
-  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
-  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-
+  {{ parent() }}
   <!-- SHA3 for the user's password -->
   <script src="vendor/crypto-js/crypto-js.js"></script>
-
-  <!-- So we can redirect page -->
-  <script src="js/utils.js"></script>
 
   <script>
     $('#loginForm').submit(function (e) {
       e.preventDefault()
-
       var form = e.target
       var postData = getFormVars(form)
-
       postData['password'] = CryptoJS.SHA3(postData['password']).toString()
-
-      $.post(form.action, postData).done(function (data) {
-        var statusData = $.parseJSON(data)
-        if (statusData['status'] === 'ok') {
-          redirectToPage('list');
-        } else {
-          if (statusData['message'] === 'badClient') {
-            showMessageTo('#errorContainer', 'Por favor insira a sua informação corretamente.')
+      $
+        .post(form.action, postData)
+        .done(function (data) {
+          if (data['status'] === 'ok') {
+            redirectToPage('list');
           } else {
-            showMessageTo('#errorContainer', 'Ocorreu um erro ao criar a sua conta.')
+            showMessageTo('#errorContainer', getErrorMessage(data['message']))
           }
-        }
-      }).fail(function () {
-        showMessageTo('#errorContainer', 'Ocorreu um erro ao criar a sua conta.')
-      })
+        })
+        .fail(function () {
+          showMessageTo('#errorContainer', getErrorMessage(null))
+        })
     })
   </script>
 {% endblock %}

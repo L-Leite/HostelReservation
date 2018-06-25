@@ -60,51 +60,32 @@
 {% block footer %}{% endblock %}
 
 {% block scripts %}
-  <!-- jQuery -->
-  <script src="vendor/jquery/dist/jquery.min.js"></script>
-
-  <!-- Bootstrap and its dependencies -->
-  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
-  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+  {{ parent() }}
 
   <!-- SHA3 for the user's password -->
   <script src="vendor/crypto-js/crypto-js.js"></script>
 
-  <!-- So we can redirect page -->
-  <script src="js/utils.js"></script>
-
   <script>
     $('#signupForm').submit(function (e) {
       e.preventDefault()
-
       if ($('#inputPassword').val() !== $('#inputConfPassword').val()) {
         showMessageTo('#errorContainer', 'Por favor repita a sua palavra-passe corretamente.')
         return
       }
-
       var form = e.target
       var postData = getFormVars(form)
-
       postData['password'] = CryptoJS.SHA3(postData['password']).toString()
-
-      $.post(form.action, postData)
+      $
+        .post(form.action, postData)
         .done(function (data) {
-          var statusData = $.parseJSON(data)
-          var status = statusData['status']
-          if (status === 'ok') {
+          if (data['status'] === 'ok') {
             redirectToPage('list');
           } else {
-            var message = statusData['message']
-
-            if (message === 'userAlreadyExists') {
-              showMessageTo('#errorContainer', 'Este utilizador já existe!')
-            } else {
-              showMessageTo('#errorContainer', 'Ocorreu um erro ao criar a sua conta.')
-            }
+            showMessageTo('#errorContainer', getErrorMessage(data['message']))
           }
         })
         .fail(function () {
-          showMessageTo('#errorContainer', 'Ocorreu um erro ao criar a sua conta.')
+          showMessageTo('#errorContainer', getErrorMessage(null))
         })
     })
   </script>

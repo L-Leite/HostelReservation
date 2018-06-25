@@ -9,4 +9,7 @@ $imagesRoot = 'images/hostel/';
 // eg: localhost/test would be 1
 $dirDistance = 1;
 
+// used in php page redirections
+$wwwRootDir = $_SERVER['SERVER_NAME'].'/'.'HostelReservation';
+
 chdir($rootPath);

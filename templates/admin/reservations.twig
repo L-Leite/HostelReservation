@@ -2,8 +2,8 @@
 {% extends "@admin/base.twig" %}
 
 {% block main %}
-  <main role="main" class="bg-light py-5 mt-md-5">
-    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <main role="main" class="bg-light py-5 mt-5">
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mt-5 mx-auto text-center">
       <h1 class="display-4">Reservas</h1>
       <p class="lead">Todas as reservas feitas.</p>
     </div>
@@ -27,25 +27,8 @@
 {% endblock %}
 
 {% block scripts %}
-  <!-- jQuery -->
-  <script src="vendor/jquery/dist/jquery.min.js"></script>
-
-  <!-- Bootstrap and its dependencies -->
-  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
-  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-
-  <!-- Velocity.js for animations -->
-  <script src="vendor/velocity-animate/velocity.min.js"></script>
-  <script src="vendor/velocity-animate/velocity.ui.min.js"></script>
-
-  <!-- So we can redirect page -->
-  <script src="js/utils.js"></script>
-
+  {{ parent() }}
   <script>
-    // animates the modal
-    $('.modal').on('show.bs.modal', function (e) {
-      $(this).find('.modal-dialog').velocity('transition.shrinkIn', {duration: 300})
-    })
     // override default submit
     $('#reserveForm').submit(function (e) {
       e.preventDefault()
@@ -58,15 +41,14 @@
       $
         .post(form.action, postData)
         .done(function (data) {
-          var statusData = $.parseJSON(data)
-          if (statusData['status'] === 'ok') {
+          if (data['status'] === 'ok') {
             redirectToPage('reserved');
           } else {
-            showModalError('#errorModal', 'Ocorreu um erro ao reservar.')
+            showModalError('#errorModal', getErrorMessage(data['message']))
           }
         })
         .fail(function () {
-          showModalError('#errorModal', 'Ocorreu um erro ao reservar.')
+          showModalError('#errorModal', getErrorMessage(null))
         })
     })
   </script>

@@ -5,8 +5,8 @@
   <main role="main">
     <!-- Presentation jumbotron -->
     <div class="jumbotron bg-jumbotron">
-      <div class="container">
-        <h1 class="display-4">A reserva de hostéis facilitada</h1>
+      <div class="container mt-5 mb-5">
+        <h1 class="display-4 mt-5">A reserva de hostéis facilitada</h1>
         <p>Encontre e reserve hostéis rapidamente com HostelReservation.</p>
         <p>
           <a class="btn btn-primary btn-lg" href="login" role="button">Entrar</a>
@@ -109,4 +109,11 @@
       </div>
     </div>
   </main>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+
+  <!-- animate the navbar -->
+  <script src="js/navbar.js"></script>
 {% endblock %}

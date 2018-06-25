@@ -182,16 +182,16 @@ class Database
     //
     // hostel
     //
-    public function getHostel()
+    public function getHostelById($hostelId)
     {
-        $stmt = $this->dbConn->prepare('SELECT * FROM hostel;');
+        $stmt = $this->dbConn->prepare('SELECT * FROM hostel WHERE id=:id;');
+        $stmt->bindValue(':id', $hostelId);
 
         if (!$stmt->execute()) {
-            throw exception('getHostel: não foi possível executar a query!');
+            throw exception('getHostelById: não foi possível executar a query!');
         }
 
-        $outHostel = $stmt->fetchAll();
-        return $outHostel;
+        return $stmt->fetch();
     }
 
     public function getAllHostelsInfo()
@@ -385,15 +385,17 @@ class Database
         && $this->isCurrentlyReserved($hostelId, $clientId) === false;
     }
 
-    public function newHostel($address, $roomPrice, $roomsAvailable = 0)
+    public function newHostel($address, $roomPrice, $roomsAvailable, $description, $image_url)
     {
         $stmt = $this->dbConn->prepare(
-            'INSERT INTO hostelgrade(address,room_price,rooms_available)
-            VALUES(:address,:room_price,:rooms_available);'
+            'INSERT INTO hostel(address,room_price,rooms_available,description,image_url)
+            VALUES(:address,:room_price,:rooms_available,:description,:image_url);'
         );
         $stmt->bindValue(':address', $address);
         $stmt->bindValue(':room_price', $roomPrice);
         $stmt->bindValue(':rooms_available', $roomsAvailable);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':image_url', $image_url);
 
         if (!$stmt->execute()) {
             throw exception(
@@ -402,18 +404,21 @@ class Database
         }
     }
 
-    public function editHostel($hostelId, $address, $roomPrice, $roomsAvailable)
+    public function editHostel($hostelId, $address, $roomPrice, $roomsAvailable, $description, $image_url)
     {
         $stmt = $this->dbConn->prepare(
-            'UPDATE hostel SET address = :address
-            room_price = :room_price, rooms_available = :rooms_available
+            'UPDATE hostel SET address = :address,
+            room_price = :room_price, rooms_available = :rooms_available,
+            description = :description, image_url = :image_url
             WHERE id = :hostel_id;'
         );
 
+        $stmt->bindValue(':hostel_id', $hostelId);
         $stmt->bindValue(':address', $address);
         $stmt->bindValue(':room_price', $roomPrice);
         $stmt->bindValue(':rooms_available', $roomsAvailable);
-        $stmt->bindValue(':hostel_id', $hostelId);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':image_url', $image_url);
 
         if (!$stmt->execute()) {
             throw exception(
@@ -561,6 +566,16 @@ class Database
 
         if (!$stmt->execute()) {
             throw exception('removeReservation: não foi possível executar a query!');
+        }
+    }
+
+    public function removeReservationsByHostel($hostelId)
+    {
+        $stmt = $this->dbConn->prepare('DELETE FROM reservation WHERE hostel_id = :id;');
+        $stmt->bindValue(':id', $hostelId);
+
+        if (!$stmt->execute()) {
+            throw exception('removeReservationsByHostel: não foi possível executar a query!');
         }
     }
 

@@ -1,0 +1,23 @@
+<div class="col-lg-4 col-sm-6">
+  <div class="card mb-4">
+    <div class="card-body">
+      <img class="card-img-top mb-3" alt="{{ hostelAddress }}" src="{{ hostelImageUrl }}">
+      <p class="card-text mb-0">{{ hostelAddress }}</p>
+      {% block cardBody %}
+        <p class="card-text text-muted">
+          {{ hostelRooms }}
+          quartos disponíveis.
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <a type="button" class="btn btn-sm btn-warning" href="./admin/edit_hostel?id={{ hostelId }}">Editar &raquo</a>
+            <button type="button" class="btn btn-sm btn-danger deleteHostel" data-toggle="modal" data-target="#deleteModal" data-hostel="{{ hostelId }}">Eliminar &raquo</button>
+          </div>
+          <small class="text-muted">
+            Preço por quarto: €{{ hostelPrice }}.
+          </small>
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+</div>

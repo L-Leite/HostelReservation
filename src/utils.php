@@ -36,7 +36,7 @@ function getRequestedPath()
 
     $desiredIndex = $GLOBALS['dirDistance'] + 1;
 
-    if (sizeof($paths) > $desiredIndex + 1) {
+    if (sizeof($paths) + 1 < $desiredIndex) {
         return false;
     }
 
@@ -60,7 +60,27 @@ function getAdminRequest()
     $paths = explode('/', $_SERVER['REQUEST_URI']);
     $desiredIndex = $GLOBALS['dirDistance'] + 2;
 
+    if (sizeof($paths) + 1 < $desiredIndex) {
+        return false;
+    }
+
     $getStart = strpos($paths[$desiredIndex], '?');
 
     return substr($paths[$desiredIndex], 0, $getStart ? $getStart : strlen($paths[$desiredIndex]));
+}
+
+function redirectTo($page)
+{
+    header('Location: http://'.$GLOBALS['wwwRootDir'].'/'.$page, true, 307);
+    die();
+}
+
+function isWebResource($extension)
+{
+    return $extension === 'js'
+        || $extension === 'css'
+        || $extension === 'gif'
+        || $extension === 'jpg'
+        || $extension === 'jpeg'
+        || $extension === 'png';
 }

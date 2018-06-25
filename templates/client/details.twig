@@ -2,7 +2,7 @@
 {% extends "@client/base.twig" %}
 
 {% block main %}
-  <main role="main" class="bg-light py-5 mt-md-5">
+  <main role="main" class="bg-light py-5 mt-5">
     <!-- Reserve Modal -->
     <div class="modal" id="reserveModal" tabindex="-1" role="dialog" aria-labelledby="reserveModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -43,7 +43,7 @@
       </div>
     </div>
     {% include 'errorModal.twig' %}
-    <div class="container">
+    <div class="container pt-5 mt-5">
       <div class="card my-5">
         <div class="card-background" style="background-image: url('./{{ imgRoot ~ hostel.image_url }}')"></div>
         <div class="card-body">
@@ -78,25 +78,8 @@
 {% endblock %}
 
 {% block scripts %}
-  <!-- jQuery -->
-  <script src="vendor/jquery/dist/jquery.min.js"></script>
-
-  <!-- Bootstrap and its dependencies -->
-  <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
-  <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-
-  <!-- Velocity.js for animations -->
-  <script src="vendor/velocity-animate/velocity.min.js"></script>
-  <script src="vendor/velocity-animate/velocity.ui.min.js"></script>
-
-  <!-- So we can redirect page -->
-  <script src="js/utils.js"></script>
-
+  {{ parent() }}
   <script>
-    // animates the modal
-    $('.modal').on('show.bs.modal', function (e) {
-      $(this).find('.modal-dialog').velocity('transition.shrinkIn', {duration: 300})
-    })
     // override default submit
     $('#reserveForm').submit(function (e) {
       e.preventDefault()
@@ -109,15 +92,14 @@
       $
         .post(form.action, postData)
         .done(function (data) {
-          var statusData = $.parseJSON(data)
-          if (statusData['status'] === 'ok') {
-            redirectToPage('reserved');
+          if (data['status'] === 'ok') {
+            redirectToPage('list');
           } else {
-            showModalError('#errorModal', 'Ocorreu um erro ao reservar.')
+            showModalError('#errorModal', getErrorMessage(data['message']))
           }
         })
         .fail(function () {
-          showModalError('#errorModal', 'Ocorreu um erro ao reservar.')
+          showModalError('#errorModal', getErrorMessage(null))
         })
     })
   </script>

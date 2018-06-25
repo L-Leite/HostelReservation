@@ -1,0 +1,92 @@
+{% set navbarDark = true %}
+{% extends "@admin/base.twig" %}
+
+{% block main %}
+  <main role="main" class="bg-light py-5 mt-5">
+    {% include 'errorModal.twig' %}
+    <div class="container pt-5 mt-5">
+      <div class="row justify-content-center">
+        <div class="col-auto shadow p-5">
+          <div class="mb-3">
+            <h3>Criar um hostel</h3>
+          </div>
+          <form id="newForm" enctype="multipart/form-data" method="POST">
+            <div class="form-group">
+              <label for="newAddressInput">Morada do hostel</label>
+              <input type="text" maxlength="60" class="form-control" id="newAddressInput" name="address" placeholder="Morada" required="required">
+            </div>
+            <div class="form-group">
+              <label for="newRoomsInput">Quartos disponíveis</label>
+              <input type="number" max="65535" class="form-control" id="newRoomsInput" name="roomsAvailable" placeholder="Número de quartos" required="required">
+            </div>
+            <div class="form-group">
+              <label for="newPriceInput">Preço por quarto</label>
+              <div class="input-group mb-2">
+                <input type="number" max="65536" class="form-control" id="newRoomsInput" name="roomPrice" placeholder="Preço por quarto" required="required">
+                <div class="input-group-append">
+                  <div class="input-group-text">€</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="newDescriptionInput">Descrição do hostel</label>
+              <input type="text" maxlength="255" class="form-control" id="newDescriptionInput" name="description" placeholder="Descrição" required="required">
+            </div>
+            <div class="form-group">
+              <label for="newImageInput">Imagem do hostel</label>
+              <div class="custom-file">
+                <label class="custom-file-label" id="curImageLabel">Escolher imagem</label>
+                <input type="hidden" name="MAX_FILE_SIZE" value="1073741824"/>
+                <input type="file" class="custom-file-input" id="newImageInput" name="image" required="required">
+              </div>
+            </div>
+            <div style="max-width: 27em;">
+              <div class="row">
+                <div class="col-auto mx-auto">
+                  <img class="shadow" id="previewImage" src="#" alt="" style="max-height: 100%;max-width: 100%;">
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="doNewHostel" value="1"/>
+            <button type="submit" class="btn btn-primary mt-3">Criar &raquo</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script>
+    // loads the image to the user when he picks it
+    $('#newImageInput').change(function () {
+      if (this.files && this.files[0]) {
+        var reader = new FileReader()
+        $('#curImageLabel').html(this.files[0].name)
+        reader.onload = function (e) {
+          $('#previewImage').attr('src', e.target.result)
+        }
+        reader.readAsDataURL(this.files[0])
+      }
+    });
+    // override default submit
+    $('#newForm').submit(function (e) {
+      e.preventDefault()
+      var form = e.target
+      var postData = new FormData(form)
+      $
+        .post({url: form.action, data: postData, processData: false, contentType: false})
+        .done(function (data) {
+          if (data['status'] === 'ok') {
+            redirectToPage('./admin/hostels');
+          } else {
+            showModalError('#errorModal', getErrorMessage(data['message']))
+          }
+        })
+        .fail(function () {
+          showModalError('#errorModal', getErrorMessage(null))
+        })
+    })
+  </script>
+{% endblock %}

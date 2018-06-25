@@ -1,9 +1,9 @@
 <?php
-namespace App\Model\Client;
+namespace App\Model\Admin;
 
 use App\Model\BaseModel;
 
-class ReservedModel extends BaseModel
+class HostelsModel extends BaseModel
 {
     public function isPost()
     {
@@ -12,7 +12,7 @@ class ReservedModel extends BaseModel
 
     public function isValidData()
     {
-        return (isPostVarSet('id') === true);
+        return (isPostVarSet('hostelId') === true);
     }
 
     public function onPost()
@@ -22,17 +22,13 @@ class ReservedModel extends BaseModel
             return false;
         }
 
-        $id = getPostVar('id');
+        $hostelId = getPostVar('hostelId');
+        $hostelData = $this->db->getHostelInfo($hostelId);
+        unlink('./public/images/hostel/'.$hostelData['image_url']);
 
         try {
-            $reserveInfo = $this->db->getReservation($id);
-
-            if ($reserveInfo['client_id'] != getSessionUser()) {
-                $this->sendStatus('error', 'invalidClient');
-                return false;
-            }
-
-            $this->db->removeReservation($id);
+            $this->db->removeReservationsByHostel($hostelId);
+            $this->db->removeHostel($hostelId);
         } catch (\Exception $e) {
             $this->sendStatus('error', 'dbError');
             return false;
@@ -44,6 +40,6 @@ class ReservedModel extends BaseModel
 
     public function getData()
     {
-        return $this->db->getAllReservedHostelsInfoByClient(getSessionUser());
+        return $this->db->getAllHostelsInfo();
     }
 }

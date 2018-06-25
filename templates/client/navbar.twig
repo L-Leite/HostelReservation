@@ -9,23 +9,25 @@
 <nav class="navbar navbar-expand-xl navbar-togglable fixed-top
   {{ navbarDark ? 'navbar-dark' : 'navbar-fixed-top' }}
   ">
-  <div class="container">
+  <div class="container p-2">
     <div class="navbar-brand">
       <a href="index">
-        <img src="images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        HostelR
+        <img src="images/logo.png" class="d-inline-block align-top" alt="HostelR" style="width: 3em;">
       </a>
     </div>
-    <div class="navbar-collapse">
+    <div class="navbar-collapse text-center">
       <ul class="navbar-nav ml-auto">
         {% block navItems %}
           {{ nav.navItem('Início', './')}}
-          {% if curPage == 'list' %}
-            {{ nav.navItem('Reservas', 'reserved') }}
-          {% elseif curPage == 'reserved' %}
-            {{ nav.navItem('Hosteis', 'list') }}
-          {% endif %}
           {% if loggedIn %}
+            {% if curPage == 'list' %}
+              {{ nav.navItem('Reservas', 'reserved') }}
+            {% elseif curPage == 'reserved' %}
+              {{ nav.navItem('Hosteis', 'list') }}
+            {% else %}
+              {{ nav.navItem('Hosteis', 'list') }}
+              {{ nav.navItem('Reservas', 'reserved') }}
+            {% endif %}
             {{ nav.navItem('Sair', 'logout') }}
           {% endif %}
         {% endblock %}

@@ -13,7 +13,7 @@ class LoginModel extends BaseModel
     public function isValidData()
     {
         return (isPostVarSet('username') === true
-            || isPostVarSet('password') === true);
+            && isPostVarSet('password') === true);
     }
 
     public function onPost()
@@ -26,10 +26,15 @@ class LoginModel extends BaseModel
         $username = getPostVar('username');
         $password = getPostVar('password');
 
-        $adminId = $this->db->loginAdmin(
-            $username,
-            $password
-        );
+        try {
+            $adminId = $this->db->loginAdmin(
+                $username,
+                $password
+            );
+        } catch (\Exception $e) {
+            $this->sendStatus('error', 'dbError');
+            return false;
+        }
 
         if ($adminId == null) {
             $this->sendStatus('error', 'badAdmin');

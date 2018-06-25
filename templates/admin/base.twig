@@ -50,8 +50,22 @@
       <script src="vendor/popper.js/dist/umd/popper.min.js"></script>
       <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
-      <!-- Changes the navbar color -->
-      <script src="js/navbar.js"></script>
+      <!-- Velocity.js for animations -->
+      <script src="vendor/velocity-animate/velocity.min.js"></script>
+      <script src="vendor/velocity-animate/velocity.ui.min.js"></script>
+
+      <!-- So we can redirect page -->
+      <script src="js/utils.js"></script>
+
+      <!-- User friendly errors -->
+      <script src="js/errors.js"></script>
+
+      <script>
+        // animates the modals
+        $('.modal').on('show.bs.modal', function (e) {
+          $(this).find('.modal-dialog').velocity('transition.shrinkIn', {duration: 300})
+        })
+      </script>
     {% endblock %}
   </body>
 

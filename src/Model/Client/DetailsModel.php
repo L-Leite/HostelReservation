@@ -13,9 +13,9 @@ class DetailsModel extends BaseModel
     public function isValidData()
     {
         return (isPostVarSet('userId') === true
-            || isPostVarSet('hostelId') === true
-            || isPostVarSet('startDate') === true
-            || isPostVarSet('endDate') === true);
+            && isPostVarSet('hostelId') === true
+            && isPostVarSet('startDate') === true
+            && isPostVarSet('endDate') === true);
     }
 
     public function onPost()
@@ -40,8 +40,13 @@ class DetailsModel extends BaseModel
             return false;
         }
 
-        $this->db->newReservation($userId, $hostelId, $startDate, $endDate);
-        
+        try {
+            $this->db->newReservation($userId, $hostelId, $startDate, $endDate);
+        } catch (\Exception $e) {
+            $this->sendStatus('error', 'dbError');
+            return false;
+        }
+
         $this->sendStatus('ok');
         return true;
     }

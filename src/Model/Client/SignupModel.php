@@ -13,9 +13,9 @@ class SignupModel extends BaseModel
     public function isValidData()
     {
         return (isPostVarSet('firstn') === true
-            || isPostVarSet('lastn') === true
-            || isPostVarSet('username') === true
-            || isPostVarSet('password') === true);
+            && isPostVarSet('lastn') === true
+            && isPostVarSet('username') === true
+            && isPostVarSet('password') === true);
     }
 
     public function onPost()
@@ -34,22 +34,28 @@ class SignupModel extends BaseModel
         $phoneNumber = isPostVarSet('phone') ? getPostVar('phone') : null;
         $email = isPostVarSet('email') ? getPostVar('email') : null;
 
-        $createdUser = $this->db->newClient(
-            $firstName,
-            $lastName,
-            $address,
-            $phoneNumber,
-            $email,
-            $username,
-            $password
-        );
+        try {
+            $createdUser = $this->db->newClient(
+                $firstName,
+                $lastName,
+                $address,
+                $phoneNumber,
+                $email,
+                $username,
+                $password
+            );
 
-        if ($createdUser === false) {
-            $this->sendStatus('error', 'userAlreadyExists');
+            if ($createdUser === false) {
+                $this->sendStatus('error', 'userAlreadyExists');
+                return false;
+            }
+
+            setSession($this->db->getNewClientId());
+        } catch (\Exception $e) {
+            $this->sendStatus('error', 'dbError');
             return false;
         }
-        
-        setSession($this->db->getNewClientId());
+
         $this->sendStatus('ok');
         return true;
     }

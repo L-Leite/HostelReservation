@@ -19,119 +19,149 @@ $twig = new Twig_Environment(
 
 $twig->addGlobal('imgRoot', $imagesRoot);
 
-if (isAdminRequest() === true) {
-    $requestedPath = getAdminRequest();
-    $isLoggedIn = isAdminSessionSet();
+$urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$extension = pathinfo($urlPath, PATHINFO_EXTENSION);
 
-    $twig->addGlobal('curPage', $requestedPath);
-    $twig->addGlobal('loggedIn', $isLoggedIn);
+if (isWebResource($extension) === false) {
+    if (isAdminRequest() === true) {
+        $requestedPath = getAdminRequest();
+        $isLoggedIn = isAdminSessionSet();
 
-    if ($isLoggedIn === true) {
-        if ($requestedPath === 'reservations'
-            || $requestedPath === 'login') {
-            // draw login
-            $reservations = new Controller\Admin\ReservationsController($twig);
-            $reservations->render();
-        } elseif ($requestedPath == null) {
-            // go to login
-            header('Location: ./reservations');
-        } elseif ($requestedPath === 'logout') {
-            // do logout and go back to cover
-            if (isAdminSessionSet()) {
-                deleteAdminSession();
+        $twig->addGlobal('curPage', $requestedPath);
+        $twig->addGlobal('loggedIn', $isLoggedIn);
+
+        if ($isLoggedIn === true) {
+            if ($requestedPath === 'reservations') {
+                // draw reservations
+                $reservations = new Controller\Admin\ReservationsController($twig);
+                $reservations->render();
+            } elseif ($requestedPath === 'hostels') {
+                // draw list
+                $hostels = new Controller\Admin\HostelsController($twig);
+                if ($hostels->shouldRender() === true) {
+                    $hostels->render();
+                } else {
+                    $hostels->handlePost();
+                }
+            } elseif ($requestedPath === 'new_hostel') {
+                // draw list
+                $newHostel = new Controller\Admin\NewHostelController($twig);
+                if ($newHostel->shouldRender() === true) {
+                    $newHostel->render();
+                } else {
+                    $newHostel->handlePost();
+                }
+            } elseif ($requestedPath === 'edit_hostel') {
+                // draw list
+                $editHostel = new Controller\Admin\EditHostelController($twig);
+                if ($editHostel->shouldRender() === true) {
+                    $editHostel->render();
+                } else {
+                    $editHostel->handlePost();
+                }
+            } elseif ($requestedPath === 'login'
+                || $requestedPath == null) {
+                // go to reservations
+                redirectTo('admin/reservations');
+            } elseif ($requestedPath === 'logout') {
+                // do logout and go back to cover
+                if (isAdminSessionSet()) {
+                    deleteAdminSession();
+                }
+                redirectTo('admin/login');
+            } else {
+                http_response_code(404);
+                $notFound = new Controller\NotFoundController($twig);
+                $notFound->render();
             }
-            header('Location: ./login');
         } else {
-            http_response_code(404);
-            $notFound = new Controller\NotFoundController($twig);
-            $notFound->render();
+            if ($requestedPath === 'login') {
+                // draw login
+                $login = new Controller\Admin\LoginController($twig);
+                if ($login->shouldRender() === true) {
+                    $login->render();
+                } else {
+                    $login->handlePost();
+                }
+            } elseif ($requestedPath == null) {
+                // go to login
+                redirectTo('admin/login');
+            } else {
+                http_response_code(404);
+                $notFound = new Controller\NotFoundController($twig);
+                $notFound->render();
+            }
         }
     } else {
-        if ($requestedPath === 'login') {
-            // draw login
-            $login = new Controller\Admin\LoginController($twig);
-            if ($login->shouldRender() === true) {
-                $login->render();
-            } else {
-                $login->handlePost();
-            }
-        } elseif ($requestedPath == null) {
-            // go to login
-            header('Location: login');
-        } else {
-            http_response_code(404);
-            $notFound = new Controller\NotFoundController($twig);
-            $notFound->render();
-        }
-    }
-} else {
-    $requestedPath = getRequestedPath();
-    $isLoggedIn = isSessionSet();
-    
-    $twig->addGlobal('curPage', $requestedPath);
-    $twig->addGlobal('loggedIn', $isLoggedIn);
+        $requestedPath = getRequestedPath();
+        $isLoggedIn = isSessionSet();
 
-    if ($isLoggedIn === true) {
-        if ($requestedPath === 'list') {
-            // draw list
-            $list = new Controller\Client\ListController($twig);
-            $list->render();
-        } elseif ($requestedPath === 'details') {
-            // draw details
-            $details = new Controller\Client\DetailsController($twig);
-            if ($details->shouldRender() === true) {
-                $details->render();
+        $twig->addGlobal('curPage', $requestedPath);
+        $twig->addGlobal('loggedIn', $isLoggedIn);
+
+        if ($isLoggedIn === true) {
+            if ($requestedPath === 'list') {
+                // draw list
+                $list = new Controller\Client\ListController($twig);
+                $list->render();
+            } elseif ($requestedPath === 'details') {
+                // draw details
+                $details = new Controller\Client\DetailsController($twig);
+                if ($details->shouldRender() === true) {
+                    $details->render();
+                } else {
+                    $details->handlePost();
+                }
+            } elseif ($requestedPath === 'reserved') {
+                // draw reserved
+                $reserved = new Controller\Client\ReservedController($twig);
+                if ($reserved->shouldRender() === true) {
+                    $reserved->render();
+                } else {
+                    $reserved->handlePost();
+                }
+            } elseif ($requestedPath === 'logout') {
+                // do logout and go back to cover
+                if (isSessionSet()) {
+                    deleteSession();
+                }
+                redirectTo('cover');
             } else {
-                $details->handlePost();
+                // go to list
+                redirectTo('list');
             }
-        } elseif ($requestedPath === 'reserved') {
-            // draw reserved
-            $reserved = new Controller\Client\ReservedController($twig);
-            if ($reserved->shouldRender() === true) {
-                $reserved->render();
-            } else {
-                $reserved->handlePost();
-            }
-        } elseif ($requestedPath === 'logout') {
-            // do logout and go back to cover
-            if (isSessionSet()) {
-                deleteSession();
-            }
-            header('Location: cover');
         } else {
-            // go to list
-            header('Location: list');
-        }
-    } else {
-        if ($requestedPath === 'list'
-        || $requestedPath === 'reserved'
-        || $requestedPath === 'details') {
-            header('Location: login');
-        } elseif ($requestedPath === 'login') {
-            // draw login
-            $login = new Controller\Client\LoginController($twig);
-            if ($login->shouldRender() === true) {
-                $login->render();
+            if ($requestedPath === 'login') {
+                // draw login
+                $login = new Controller\Client\LoginController($twig);
+                if ($login->shouldRender() === true) {
+                    $login->render();
+                } else {
+                    $login->handlePost();
+                }
+            } elseif ($requestedPath === 'signup') {
+                $signup = new Controller\Client\SignupController($twig);
+                if ($signup->shouldRender() === true) {
+                    $signup->render();
+                } else {
+                    $signup->handlePost();
+                }
+            } elseif ($requestedPath === 'cover') {
+                $cover = new Controller\Client\CoverController($twig);
+                $cover->render();
+            } elseif ($requestedPath === 'list'
+                || $requestedPath === 'reserved'
+                || $requestedPath === 'details') {
+                // go to login
+                redirectTo('login');
+            } elseif ($requestedPath == null) {
+                // go to cover
+                redirectTo('cover');
             } else {
-                $login->handlePost();
+                http_response_code(404);
+                $notFound = new Controller\NotFoundController($twig);
+                $notFound->render();
             }
-        } elseif ($requestedPath === 'signup') {
-            $signup = new Controller\Client\SignupController($twig);
-            if ($signup->shouldRender() === true) {
-                $signup->render();
-            } else {
-                $signup->handlePost();
-            }
-        } elseif ($requestedPath === 'cover') {
-            $cover = new Controller\Client\CoverController($twig);
-            $cover->render();
-        } elseif ($requestedPath == null) {
-            // go to cover
-            header('Location: cover');
-        } else {
-            http_response_code(404);
-            $notFound = new Controller\NotFoundController($twig);
-            $notFound->render();
         }
     }
 }

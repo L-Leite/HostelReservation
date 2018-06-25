@@ -1,0 +1,27 @@
+{% extends 'baseModal.twig' %}
+
+{% set modalId = 'deleteModal' %}
+{% set modalHeaderBg = 'bg-danger' %}
+{% set modalBodyBg = 'bg-danger' %}
+{% set modalFooterBg = 'bg-danger' %}
+
+{% block modalTitle %}
+Eliminar hostel
+{% endblock %}
+
+{% block modalBody %}
+<p>Tem a certeza que deseja eliminar este hostel?</p>
+{% endblock %}
+
+{% block modalFooter %}
+<form method="POST">
+  <button type="button" class="btn btn-secondary text-white" data-dismiss="modal">
+    Fechar
+  </button>
+  <button type="submit" class="btn btn-danger text-white">
+    Eliminar
+  </button>
+  <input type="hidden" id="deleteHostelId" name="hostelId" value="">
+  <input type="hidden" name="doDelete" value="1">
+</form>
+{% endblock %}
