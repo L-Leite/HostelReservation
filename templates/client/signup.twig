@@ -78,10 +78,11 @@
       $
         .post(form.action, postData)
         .done(function (data) {
-          if (data['status'] === 'ok') {
+          var statusData = $.parseJSON(data)
+          if (statusData['status'] === 'ok') {
             redirectToPage('list');
           } else {
-            showMessageTo('#errorContainer', getErrorMessage(data['message']))
+            showMessageTo('#errorContainer', getErrorMessage(statusData['message']))
           }
         })
         .fail(function () {

@@ -14,7 +14,7 @@ function getErrorMessage(error) {
             return 'Ocorreu um erro de base de dados.'
         case 'badClient':
         case 'badAdmin':
-            return 'A conta não existe.'
+            return 'A conta não existe ou os dados introduzidos são inválidos.'
         case 'userAlreadyExists':
             return 'Esta conta já existe.'
     }

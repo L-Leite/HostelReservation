@@ -92,10 +92,11 @@
       $
         .post(form.action, postData)
         .done(function (data) {
-          if (data['status'] === 'ok') {
+          var statusData = $.parseJSON(data)
+          if (statusData['status'] === 'ok') {
             redirectToPage('list');
           } else {
-            showModalError('#errorModal', getErrorMessage(data['message']))
+            showModalError('#errorModal', getErrorMessage(statusData['message']))
           }
         })
         .fail(function () {

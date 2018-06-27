@@ -41,10 +41,11 @@
       $
         .post(form.action, postData)
         .done(function (data) {
-          if (data['status'] === 'ok') {
+          var statusData = $.parseJSON(data)
+          if (statusData['status'] === 'ok') {
             redirectToPage('reserved');
           } else {
-            showModalError('#errorModal', getErrorMessage(data['message']))
+            showModalError('#errorModal', getErrorMessage(dastatusDatata['message']))
           }
         })
         .fail(function () {
